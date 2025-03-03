@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>เครื่องคิดเงินร้านค้า</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="app.js"/>
+</head>
+
+<body>
+    <h1>Cckc Shop</h1>
+
+    <div id="product-list" class="product-grid"></div>
+
+    <div id="items"></div>
+    <br>
+    <button onclick="addItem()">เพิ่มสินค้า</button>
+    <button onclick="calculateTotal()">ชำระเงิน</button>
+
+    <h2 id="total">ราคารวม: 0 บาท</h2>
+
+    <div id="receipt" style="display: none;">
+        <h2>ใบเสร็จรับเงิน</h2>
+        <p>ร้านค้า: Cckc Shop </p>
+        <div id="receipt-items"></div>
+        <p id="receipt-summary"></p>
+        <p id="receipt-total"></p>
+        <p id="receipt-payment"></p>
+        <p id="receipt-change"></p>
+    </div>
+
+    <script>
+        const products = [
+            { name: 'ยำหมี่ไก่ฉีก M', price: 30, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+1' },
+            { name: 'ยำหมี่ไก่ฉีก L', price: 50, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+2' },
+            { name: 'ยำหมี่ไก่ฉีก XL', price: 90, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+3' },
+            { name: 'น้ำพริกกากหมู', price: 15, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+4' },
+            { name: 'เพิ่มเส้นหมี่', price: 10, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+5' },
+            { name: 'เพิ่มไก่ฉีก', price: 10, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+13' },
+
+
+            { name: 'โกโก้เย็น', price: 25, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+6' },
+            { name: 'โกโก้เย็น + ปั่น', price: 35, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+7' },
+            { name: 'ชาเขียวเย็น', price: 25, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+8' },
+            { name: 'ชาเขียวเย็น + ปั่น', price: 35, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+9' },
+            { name: 'ชาไทยเย็น', price: 25, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+10' },
+            { name: 'ชาไทยเย็น + ปั่น', price: 35, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+11' },
+            { name: 'เพิ่มชีส', price: 10, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+12' },
+            { name: 'เพิ่มบุก', price: 10, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+12' },
+
+            { name: 'ว่าง', price: 0, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+12' },
+            { name: 'ว่าง', price: 0, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+12' },
+        ];
+
+        function displayProducts() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = products.map((product, index) => `
+                <div class="product-item">
+                    <img src="${product.image}" alt="${product.name}">
+                    <p>${product.name}</p>
+                    <p>ราคา: ${product.price} บาท</p>
+                    <button onclick="addProductToCart(${index})">เลือกสินค้า</button>
+                </div>
+            `).join('');
+        }
+
+        function addProductToCart(index) {
+            const product = products[index];
+            const item = document.createElement('div');
+            item.innerHTML = `
+                <label>สินค้า: <input type="text" class="name" value="${product.name}" readonly></label>
+                <label>ราคา: <input type="number" class="price" value="${product.price}" readonly></label>
+                <label>จำนวน: <input type="number" class="quantity" value="1" min="1" required oninput="updateTotal()"></label>
+                <button onclick="removeItem(this)">ลบ</button>
+            `;
+            document.getElementById('items').appendChild(item);
+            updateTotal();
+        }
+
+        function addItem() {
+            const item = document.createElement('div');
+            item.innerHTML = `
+                <label>สินค้า: <input type="text" class="name" required></label>
+                <label>ราคา: <input type="number" class="price" step="0.01" min="0" required></label>
+                <label>จำนวน: <input type="number" class="quantity" value="1" min="1" required oninput="updateTotal()"></label>
+                <button onclick="removeItem(this)">ลบ</button>
+            `;
+            document.getElementById('items').appendChild(item);
+            updateTotal();
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const items = Array.from(document.querySelectorAll('#items div'));
+            const total = items.reduce((sum, div) => {
+                const price = parseFloat(div.querySelector('.price').value) || 0;
+                const quantity = parseInt(div.querySelector('.quantity').value) || 0;
+                return sum + (price * quantity);
+            }, 0);
+
+            document.getElementById('total').textContent = `ราคารวม: ${total.toFixed(2)} บาท`;
+        }
+
+        function calculateTotal() {
+            updateTotal();
+
+            const items = Array.from(document.querySelectorAll('#items div'));
+            const receiptItems = document.getElementById('receipt-items');
+            receiptItems.innerHTML = items.map(div => {
+                const name = div.querySelector('.name').value;
+                const price = div.querySelector('.price').value;
+                const quantity = div.querySelector('.quantity').value;
+                return `<p>${name} - ${quantity} x ${price} บาท</p>`;
+            }).join('');
+
+            const total = parseFloat(document.getElementById('total').textContent.replace('ราคารวม: ', '').replace(' บาท', ''));
+            const payment = parseFloat(prompt(`รวมทั้งหมด: ${total.toFixed(2)} บาท\nกรุณาใส่จำนวนเงินที่รับ:`)) || 0;
+            const change = payment - total;
+
+            if (payment >= total) {
+                document.getElementById('receipt-payment').textContent = `จำนวนเงินที่รับ: ${payment.toFixed(2)} บาท`;
+                document.getElementById('receipt-change').textContent = `เงินทอน: ${change.toFixed(2)} บาท`;
+                document.getElementById('receipt').style.display = 'block';
+                window.print();
+                location.reload();
+            } else {
+                alert("จำนวนเงินไม่เพียงพอ!");
+            }
+        }
+
+        window.onload = displayProducts;
+        
+    </script>
+
+
+</body>
+
+</html>
