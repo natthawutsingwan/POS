@@ -1,145 +1,416 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>เครื่องคิดเงินร้านค้า</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"/>
-    <link rel="stylesheet" href="app.js"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>POS บันทึกและพิมพ์ใบเสร็จ</title>
+    <link rel="stylesheet" href="style.css"/>   
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    .products, .cart, .receipt, .history {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 280px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .product-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+    .product-image {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+    .product-details {
+      flex: 1;
+    }
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      margin: 2px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    /* แสดงจำนวนเงิน */
+    #cash-display {
+      font-size: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+      background: white;
+      text-align: right;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    .total {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+    .receipt pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      background-color: #fff9e6;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .cash-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      background-color: #27ae60;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 9999;
+    }
+    .popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Cckc Shop</h1>
 
-    <div id="product-list" class="product-grid"></div>
+<header>
+  <h1>ระบบขายหน้าร้าน POS</h1>
+  <p>รองรับการบันทึกและพิมพ์ใบเสร็จย้อนหลัง</p>
+</header>
 
-    <div id="items"></div>
-    <br>
-    <button onclick="addItem()">เพิ่มสินค้า</button>
-    <button onclick="calculateTotal()">ชำระเงิน</button>
+<div class="container">
 
-    <h2 id="total">ราคารวม: 0 บาท</h2>
+  <!-- สินค้า -->
+  <div class="products">
+    <h2>รายการสินค้า</h2>
+    <div id="product-list"></div>
+  </div>
 
-    <div id="receipt" style="display: none;">
-        <h2>ใบเสร็จรับเงิน</h2>
-        <p>ร้านค้า: Cckc Shop </p>
-        <div id="receipt-items"></div>
-        <p id="receipt-summary"></p>
-        <p id="receipt-total"></p>
-        <p id="receipt-payment"></p>
-        <p id="receipt-change"></p>
+  <!-- ตะกร้า -->
+  <div class="cart">
+    <h2>ตะกร้าสินค้า</h2>
+    <table id="cart-table">
+      <thead>
+        <tr>
+          <th>ชื่อสินค้า</th>
+          <th>จำนวน</th>
+          <th>ราคา</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="total">รวมทั้งหมด: <span id="total">0</span> บาท</div>
+
+    <label>รับเงินสด:</label><br>
+    <input type="text" id="cash-display" readonly value="0" />
+
+    <div class="cash-buttons">
+      <button onclick="addDigit('1')">1</button>
+      <button onclick="addDigit('2')">2</button>
+      <button onclick="addDigit('3')">3</button>
+      <button onclick="addDigit('4')">4</button>
+      <button onclick="addDigit('5')">5</button>
+      <button onclick="addDigit('6')">6</button>
+      <button onclick="addDigit('7')">7</button>
+      <button onclick="addDigit('8')">8</button>
+      <button onclick="addDigit('9')">9</button>
+      <button onclick="clearCash()">ลบ</button>
+      <button onclick="addDigit('0')">0</button>
+      <button onclick="backspace()">←</button>
     </div>
-
-    <script>
-        const products = [
-            { name: 'ยำหมี่ไก่ฉีก M', price: 30, stock: 100, image: 'img/หมี่ไก่ฉีก 30.png' },
-            { name: 'ยำหมี่ไก่ฉีก L', price: 50, stock: 100, image: 'img/หมี่ไก่ฉีก 30.png' },
-            { name: 'ยำหมี่ไก่ฉีก XL', price: 90, stock: 100, image: 'img/หมี่ไก่ฉีก 30.png' },
-            { name: 'น้ำพริกกากหมู', price: 15, stock: 100, image: 'img/น้ำพริกกากหมู.png' },
-            { name: 'เพิ่มเส้นหมี่', price: 10, stock: 100, image: 'img/เพิ่มเส้นหมี่.png' },
-            { name: 'เพิ่มไก่ฉีก', price: 10, stock: 100, image: 'img/เพิ่มไก่ฉีก.png' },
-        
-            { name: 'โกโก้เย็น', price: 25, stock: 100, image: 'img/โกโก้.png' },
-            { name: 'โกโก้เย็น + ปั่น', price: 35, stock: 100, image: 'img/โกโก้เย็น+ชีส.png' },
-            { name: 'ชาเขียวเย็น', price: 25, stock: 100, image: 'img/ชาเขียวเย็น.png' },
-            { name: 'ชาเขียวเย็น + ปั่น', price: 35, stock: 100, image: 'img/ชาเขียวเย็น_ปั่น.png' },
-            { name: 'ชาไทยเย็น', price: 25, stock: 100, image: 'img/ชาไทยเย็น.png' },
-            { name: 'ชาไทยเย็น + ปั่น', price: 35, stock: 100, image: 'img/ชาไทยเย็น_ปั่น.png' },
     
-            { name: 'เพิ่มชีส', price: 10, stock: 100, image: 'img/เพิ่มชีส.png' },
-            { name: 'เพิ่มบุก', price: 10, stock: 100, image: 'img/เพิ่มบุก.png' },
+
+    <button onclick="checkout()" style="margin-top:10px;">ชำระเงิน</button>
+    <div id="change-result" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- ใบเสร็จ -->
+  <div class="receipt">
+    <h2>ใบเสร็จรับเงิน</h2>
+    <pre id="receipt-text">ยังไม่มีการชำระเงิน</pre>
+  </div>
+
+  <!-- ประวัติการขาย -->
+  <div class="history">
+    <h2>ประวัติการขาย</h2>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>เวลา</th>
+          <th>ยอดรวม</th>
+          <th>รับเงิน</th>
+          <th>เงินทอน</th>
+          <th>ดำเนินการ</th>
+        </tr>
+      </thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ป็อปอัปกลางจอ -->
+<div class="popup" id="success-popup">สำเร็จ!</div>
+
+<script>
+  // ตัวอย่างสินค้าพร้อมรูป
+    const products = [
+    { id: 1, name: "กาแฟ", price: 35, image: "https://via.placeholder.com/100x100?text=Coffee" },
+    { id: 2, name: "ชาเขียวเย็น", price: 40, image: "https://via.placeholder.com/100x100?text=Green+Tea" },
+    { id: 3, name: "โกโก้เย็น", price: 45, image: "https://via.placeholder.com/100x100?text=Cocoa" },
+    { id: 4, name: "ขนมปัง", price: 20, image: "https://via.placeholder.com/100x100?text=Bread" },
+    { id: 5, name: "น้ำเปล่า", price: 15, image: "https://via.placeholder.com/100x100?text=Water" },
+  ];
 
 
-            { name: 'ว่าง', price: 0, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+12' },
-            { name: 'ว่าง', price: 0, stock: 100, image: 'https://via.placeholder.com/150?text=สินค้า+12' },
-        ];
+  let cart = [];
+  let salesHistory = [];
 
-        function displayProducts() {
-            const productList = document.getElementById('product-list');
-            productList.innerHTML = products.map((product, index) => `
-                <div class="product-item">
-                    <img src="${product.image}" alt="${product.name}">
-                    <p>${product.name}</p>
-                    <p>ราคา: ${product.price} บาท</p>
-                    <button onclick="addProductToCart(${index})">เลือกสินค้า</button>
-                </div>
-            `).join('');
-        }
+  function loadProducts() {
+    const container = document.getElementById("product-list");
+    products.forEach(product => {
+      const div = document.createElement("div");
+      div.className = "product-item";
+      div.innerHTML = `
+        <img src="https://via.placeholder.com/100x100?text=${encodeURIComponent(product.name)}" alt="${product.name}" class="product-image">
+        <div class="product-details">
+          ${product.name} - ${product.price} บาท<br>
+          <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;">
+          <button onclick="addToCart(${product.id})">เพิ่มลงตะกร้า</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
 
-        function addProductToCart(index) {
-            const product = products[index];
-            const item = document.createElement('div');
-            item.innerHTML = `
-                <label>สินค้า: <input type="text" class="name" value="${product.name}" readonly></label>
-                <label>ราคา: <input type="number" class="price" value="${product.price}" readonly></label>
-                <label>จำนวน: <input type="number" class="quantity" value="1" min="1" required oninput="updateTotal()"></label>
-                <button onclick="removeItem(this)">ลบ</button>
-            `;
-            document.getElementById('items').appendChild(item);
-            updateTotal();
-        }
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    const qty = parseInt(qtyInput.value);
 
-        function addItem() {
-            const item = document.createElement('div');
-            item.innerHTML = `
-                <label>สินค้า: <input type="text" class="name" required></label>
-                <label>ราคา: <input type="number" class="price" step="0.01" min="0" required></label>
-                <label>จำนวน: <input type="number" class="quantity" value="1" min="1" required oninput="updateTotal()"></label>
-                <button onclick="removeItem(this)">ลบ</button>
-            `;
-            document.getElementById('items').appendChild(item);
-            updateTotal();
-        }
+    if (isNaN(qty) || qty <= 0) {
+      alert("กรุณากรอกจำนวนสินค้าให้ถูกต้อง!");
+      return;
+    }
 
-        function removeItem(button) {
-            button.parentElement.remove();
-            updateTotal();
-        }
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+      existingItem.qty += qty;
+    } else {
+      cart.push({ ...product, qty });
+    }
 
-        function updateTotal() {
-            const items = Array.from(document.querySelectorAll('#items div'));
-            const total = items.reduce((sum, div) => {
-                const price = parseFloat(div.querySelector('.price').value) || 0;
-                const quantity = parseInt(div.querySelector('.quantity').value) || 0;
-                return sum + (price * quantity);
-            }, 0);
+    renderCart();
+  }
 
-            document.getElementById('total').textContent = `ราคารวม: ${total.toFixed(2)} บาท`;
-        }
+  function renderCart() {
+    const tbody = document.querySelector("#cart-table tbody"); 
+    tbody.innerHTML = "";
+    let total = 0;
 
-        function calculateTotal() {
-            updateTotal();
+    cart.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>${item.price * item.qty}</td>
+      `;
+      tbody.appendChild(tr);
+      total += item.price * item.qty;
+    });
 
-            const items = Array.from(document.querySelectorAll('#items div'));
-            const receiptItems = document.getElementById('receipt-items');
-            receiptItems.innerHTML = items.map(div => {
-                const name = div.querySelector('.name').value;
-                const price = div.querySelector('.price').value;
-                const quantity = div.querySelector('.quantity').value;
-                return `<p>${name} - ${quantity} x ${price} บาท</p>`;
-            }).join('');
+    document.getElementById("total").textContent = total;
+  }
 
-            const total = parseFloat(document.getElementById('total').textContent.replace('ราคารวม: ', '').replace(' บาท', ''));
-            const payment = parseFloat(prompt(`รวมทั้งหมด: ${total.toFixed(2)} บาท\nกรุณาใส่จำนวนเงินที่รับ:`)) || 0;
-            const change = payment - total;
+  function addDigit(digit) {
+    const input = document.getElementById("cash-display");
+    if (input.value === "0") {
+      input.value = digit;
+    } else {
+      input.value += digit;
+    }
+  }
 
-            if (payment >= total) {
-                document.getElementById('receipt-payment').textContent = `จำนวนเงินที่รับ: ${payment.toFixed(2)} บาท`;
-                document.getElementById('receipt-change').textContent = `เงินทอน: ${change.toFixed(2)} บาท`;
-                document.getElementById('receipt').style.display = 'block';
-                window.print();
-                location.reload();
-            } else {
-                alert("จำนวนเงินไม่เพียงพอ!");
-            }
-        }
+  function clearCash() {
+    document.getElementById("cash-display").value = "0";
+  }
 
-        window.onload = displayProducts;
-        
-    </script>
+  function backspace() {
+    const input = document.getElementById("cash-display");
+    if (input.value.length > 1) {
+      input.value = input.value.slice(0, -1);
+    } else {
+      input.value = "0";
+    }
+  }
 
+  function generateReceipt(cart, totalAmount, cashReceived, time) {
+    return `[ร้านค้า ชิกชิกเก้นฉีก]
+วันที่: ${time}
+-------------------------------------
+${cart.map(i => `${i.name.padEnd(10)} x${i.qty} = ${(i.price*i.qty).toString().padStart(6)} บาท`).join("\n")}
+-------------------------------------
+รวมทั้งหมด: ${totalAmount} บาท
+รับเงิน: ${cashReceived} บาท
+เงินทอน: ${(cashReceived - totalAmount).toFixed(2)} บาท
+ขอบคุณที่ใช้บริการ!
+`;
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("กรุณาเลือกสินค้าก่อนชำระเงิน!");
+      return;
+    }
+
+    const totalAmount = cart.reduce((sum, i) => sum + i.price*i.qty, 0);
+    const cashReceived = parseFloat(document.getElementById("cash-display").value);
+
+    if (isNaN(cashReceived) || cashReceived < totalAmount) {
+      alert("กรุณาระบุจำนวนเงินให้ถูกต้อง!");
+      return;
+    }
+
+    const change = cashReceived - totalAmount;
+    const time = new Date().toLocaleString();
+
+    // สร้างใบเสร็จ
+    const receiptText = generateReceipt(cart, totalAmount, cashReceived, time);
+    document.getElementById("receipt-text").textContent = receiptText;
+
+    // บันทึกประวัติการขาย + ใบเสร็จ
+    salesHistory.push({
+      time,
+      total: totalAmount,
+      received: cashReceived,
+      change: change.toFixed(2),
+      receipt: receiptText
+    });
+    renderHistory();
+
+    // แสดงเงินทอน
+    document.getElementById("change-result").innerHTML =
+      `<strong>เงินทอน:</strong> ${change.toFixed(2)} บาท`;
+
+    // แสดงป็อปอัป "ขอบคุณที่ใช้บริการ"
+    showPopup();
+
+    // เคลียร์ข้อมูล
+    cart = [];
+    clearCash();
+    renderCart();
+  }
+
+  function renderHistory() {
+    const tbody = document.getElementById("history-body");
+    tbody.innerHTML = "";
+
+    salesHistory.forEach((record, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${record.time}</td>
+        <td>${record.total}</td>
+        <td>${record.received}</td>
+        <td>${record.change}</td>
+        <td>
+          <button onclick="showReceipt(${index})">ดูใบเสร็จ</button>
+          <button onclick="printReceipt(${index})">พิมพ์ใบเสร็จ</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function showReceipt(index) {
+    const receipt = salesHistory[index].receipt;
+    document.getElementById("receipt-text").textContent = receipt;
+  }
+
+  function printReceipt(index) {
+    const receipt = salesHistory[index].receipt;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <pre style="font-size:14px; font-family:monospace;">${receipt}</pre>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  }
+
+  function showPopup() {
+    const popup = document.getElementById("success-popup");
+    popup.classList.add("show");
+
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 500); // ซ่อนหลังจาก 0.5 วินาที
+  }
+
+  window.onload = () => {
+    loadProducts();
+  };
+</script>
 
 </body>
-
 </html>
+
