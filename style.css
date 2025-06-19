@@ -1,10 +1,10 @@
 body {
-    font-family: 'Sarabun', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to right, #ff4321, #74aefa,#4CAF50);
-}
-header {
+      font-family: 'Sarabun', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
       background-color: #2c3e50;
       color: white;
       padding: 1rem;
