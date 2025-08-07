@@ -1,123 +1,247 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Sarabun', sans-serif;
+}
+
 body {
-      font-family: 'Sarabun', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    header {
-      background-color: #2c3e50;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-    }
-    .products, .cart, .receipt, .history {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      flex: 1;
-      min-width: 280px;
-    }
-    h2 {
-      margin-top: 0;
-    }
-    .product-item {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #ddd;
-      padding: 8px 0;
-    }
-    .product-image {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      margin-right: 10px;
-      border-radius: 4px;
-    }
-    .product-details {
-      flex: 1;
-    }
-    button {
-      padding: 6px 10px;
-      cursor: pointer;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      margin: 2px;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
+  background: #f4f6f9;
+  color: #333;
+}
 
-    /* แสดงจำนวนเงิน */
-    #cash-display {
-      font-size: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      margin: 10px 0;
-      background: white;
-      text-align: right;
-    }
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-    }
-    .total {
-      font-size: 1.2em;
-      margin-top: 10px;
-    }
-    .receipt pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      background-color: #fff9e6;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .cash-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      margin-top: 10px;
-    }
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      height: 300px;
-      background-color: #27ae60;
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      border-radius: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      z-index: 9999;
-    }
-    .popup.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+input[type="text"], input[type="number"], input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #ecf0f1;
+}
+
+img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.cart {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.history-actions {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  th { display: none; }
+  tr { margin-bottom: 10px; }
+  td {
+    position: relative;
+    padding-left: 50%;
+    border: none;
+  }
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: 45%;
+    font-weight: bold;
+  }
+}
+
+
+
+
+
+
+
+/*--------------------------------------------------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; }
+        .receipt-print { 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            line-height: 1.2;
+            width: 300px;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            .receipt-print, .receipt-print * { visibility: visible; }
+            .receipt-print { position: absolute; left: 0; top: 0; }
+        }
+        .connection-status {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .online { background: #10b981; color: white; }
+        .offline { background: #6b7280; color: white; }
+        
+        /* Custom Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        .modal-message {
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .modal-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-button:hover {
+            background: #2563eb;
+        }
+        .modal-button.success {
+            background: #10b981;
+        }
+        .modal-button.success:hover {
+            background: #059669;
+        }
+        .modal-button.error {
+            background: #ef4444;
+        }
+        .modal-button.error:hover {
+            background: #dc2626;
+        }
+        .modal-button.warning {
+            background: #f59e0b;
+        }
+        .modal-button.warning:hover {
+            background: #d97706;
+        }
+        
+        /* Loading animation */
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
