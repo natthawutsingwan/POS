@@ -1,417 +1,337 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>POS บันทึกและพิมพ์ใบเสร็จ</title>
-  <link rel="stylesheet" href="#"/>
-  <style>
-    body {
-      font-family: 'Sarabun', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;#3354;
-    }
-    header {
-      background-color: #2c3e50;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-    }
-    .products, .cart, .receipt, .history {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      flex: 1;
-      min-width: 280px;
-    }
-    h2 {
-      margin-top: 0;
-    }
-    .product-item {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #ddd;
-      padding: 8px 0;
-    }
-    .product-image {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      margin-right: 10px;
-      border-radius: 4px;
-    }
-    .product-details {
-      flex: 1;
-    }
-    button {
-      padding: 6px 10px;
-      cursor: pointer;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      margin: 2px;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System - ระบบขายหน้าร้าน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
 
-    /* แสดงจำนวนเงิน */
-    #cash-display {
-      font-size: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      margin: 10px 0;
-      background: white;
-      text-align: right;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-    }
-    .total {
-      font-size: 1.2em;
-      margin-top: 10px;
-    }
-    .receipt pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      background-color: #fff9e6;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .cash-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      margin-top: 10px;
-    }
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      height: 300px;
-      background-color: #27ae60;
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      border-radius: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      z-index: 9999;
-    }
-    .popup.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  </style>
 </head>
-<body>
-
-<header>
-  <h1>ระบบขายหน้าร้าน POS</h1>
-  <p>รองรับการบันทึกและพิมพ์ใบเสร็จย้อนหลัง</p>
-</header>
-
-<div class="container">
-
-  <!-- สินค้า -->
-  <div class="products">
-    <h2>รายการสินค้า</h2>
-    <div id="product-list"></div>
-  </div>
-
-  <!-- ตะกร้า -->
-  <div class="cart">
-    <h2>ตะกร้าสินค้า</h2>
-    <table id="cart-table">
-      <thead>
-        <tr>
-          <th>ชื่อสินค้า</th>
-          <th>จำนวน</th>
-          <th>ราคา</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div class="total">รวมทั้งหมด: <span id="total">0</span> บาท</div>
-
-    <label>รับเงินสด:</label><br>
-    <input type="text" id="cash-display" readonly value="0" />
-
-    <div class="cash-buttons">
-      <button onclick="addDigit('1')">1</button>
-      <button onclick="addDigit('2')">2</button>
-      <button onclick="addDigit('3')">3</button>
-      <button onclick="addDigit('4')">4</button>
-      <button onclick="addDigit('5')">5</button>
-      <button onclick="addDigit('6')">6</button>
-      <button onclick="addDigit('7')">7</button>
-      <button onclick="addDigit('8')">8</button>
-      <button onclick="addDigit('9')">9</button>
-      <button onclick="clearCash()">ลบ</button>
-      <button onclick="addDigit('0')">0</button>
-      <button onclick="backspace()">←</button>
+<body class="bg-gray-50">
+    <!-- Connection Status -->
+    <div id="connection-status" class="connection-status offline">
+        📡 ออฟไลน์
     </div>
-    
 
-    <button onclick="checkout()" style="margin-top:10px;">ชำระเงิน</button>
-    <div id="change-result" style="margin-top:10px;"></div>
-  </div>
-
-  <!-- ใบเสร็จ -->
-  <div class="receipt">
-    <h2>ใบเสร็จรับเงิน</h2>
-    <pre id="receipt-text">ยังไม่มีการชำระเงิน</pre>
-  </div>
-
-  <!-- ประวัติการขาย -->
-  <div class="history">
-    <h2>ประวัติการขาย</h2>
-    <table class="history-table">
-      <thead>
-        <tr>
-          <th>เวลา</th>
-          <th>ยอดรวม</th>
-          <th>รับเงิน</th>
-          <th>เงินทอน</th>
-          <th>ดำเนินการ</th>
-        </tr>
-      </thead>
-      <tbody id="history-body"></tbody>
-    </table>
-  </div>
-
-</div>
-
-<!-- ป็อปอัปกลางจอ -->
-<div class="popup" id="success-popup">สำเร็จ!</div>
-
-<script>
-  // ตัวอย่างสินค้าพร้อมรูป
-    const products = [
-    { id: 1, name: "หมี่ไก่ฉีก M ", price: 30, image: "https://via.placeholder.com/100x100?text=Coffee" },
-    { id: 2, name: "หมี่ไก่ฉีก L ", price: 50, image: "https://via.placeholder.com/100x100?text=Green+Tea" },
-    { id: 3, name: "หมี่ไก่ฉีก XL ", price: 90, image: "https://via.placeholder.com/100x100?text=Cocoa" },
-    { id: 4, name: "หมี่ไก่ฉีก XXL", price: 120, image: "https://via.placeholder.com/100x100?text=Bread" },
-    { id: 5, name: "กากหมู", price: 15, image: "https://via.placeholder.com/100x100?text=Water" },
-    { id: 6, name: "ไก่ฉีก", price: 10, image: "https://via.placeholder.com/100x100?text=Water" },
-    { id: 7, name: "หมี่ขาว", price: 10, image: "https://via.placeholder.com/100x100?text=Water" },
-  ];
-
-
-  let cart = [];
-  let salesHistory = [];
-
-  function loadProducts() {
-    const container = document.getElementById("product-list");
-    products.forEach(product => {
-      const div = document.createElement("div");
-      div.className = "product-item";
-      div.innerHTML = `
-        <img src="https://via.placeholder.com/100x100?text=${encodeURIComponent(product.name)}" alt="${product.name}" class="product-image">
-        <div class="product-details">
-          ${product.name} - ${product.price} บาท<br>
-          <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;">
-          <button onclick="addToCart(${product.id})">เพิ่มลงตะกร้า</button>
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4 shadow-lg">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold">🏪 POS System</h1>
+            <div class="flex space-x-4">
+                <button onclick="showPage('sales')" class="nav-btn bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg transition-colors">🛒 ขายสินค้า</button>
+                <button onclick="showPage('stock')" class="nav-btn bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg transition-colors">📦 จัดการสต็อก</button>
+                <button onclick="showPage('history')" class="nav-btn bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg transition-colors">📊 ประวัติการขาย</button>
+                <button onclick="showPage('settings')" class="nav-btn bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg transition-colors">⚙️ ตั้งค่า</button>
+            </div>
         </div>
-      `;
-      container.appendChild(div);
-    });
-  }
+    </nav>
 
-  function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    const qtyInput = document.getElementById(`qty-${productId}`);
-    const qty = parseInt(qtyInput.value);
+    <!-- Sales Page -->
+    <div id="sales-page" class="page p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Product Search & List -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold">🔍 ค้นหาสินค้า</h2>
+                        <button onclick="refreshProducts()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            🔄 รีเฟรช
+                        </button>
+                    </div>
+                    <input type="text" id="product-search" placeholder="ค้นหาจากชื่อ รหัส หรือบาร์โค้ด..." 
+                            class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    
+                    <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[500px] overflow-y-auto p-2">
+                        <!-- Products will be loaded here -->
+                    </div>
+                    
+                    <div id="loading-products" class="text-center py-8 hidden">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <p class="mt-2 text-gray-600">กำลังโหลดสินค้า...</p>
+                    </div>
+                </div>
+            </div>
 
-    if (isNaN(qty) || qty <= 0) {
-      alert("กรุณากรอกจำนวนสินค้าให้ถูกต้อง!");
-      return;
-    }
+            <!-- Cart & Checkout -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4">🛒 รายการสินค้า</h2>
+                    <div id="cart-items" class="space-y-2 mb-4 max-h-64 overflow-y-auto">
+                        <!-- Cart items will appear here -->
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between text-lg font-semibold mb-4">
+                            <span>ยอดรวม:</span>
+                            <span id="total-amount">฿0.00</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">วิธีการชำระเงิน:</label>
+                            <select id="payment-method" class="w-full p-2 border border-gray-300 rounded-lg">
+                                <option value="cash">💵 เงินสด</option>
+                                <option value="qr">📱 QR Code</option>
+                            </select>
+                        </div>
+                        
+                        <div id="cash-payment" class="mb-4">
+                            <label class="block text-sm font-medium mb-2">เงินที่รับ:</label>
+                            <input type="number" id="cash-received" placeholder="0.00" 
+                                class="w-full p-2 border border-gray-300 rounded-lg">
+                            <div class="flex justify-between mt-2">
+                                <span>เงินทอน:</span>
+                                <span id="change-amount">฿0.00</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick="processPayment()" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-colors mb-2">
+                            ✅ ชำระเงิน
+                        </button>
+                        <button onclick="printLastReceipt()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition-colors">
+                            🖨️ พิมพ์ใบเสร็จซ้ำ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    const existingItem = cart.find(item => item.id === productId);
-    if (existingItem) {
-      existingItem.qty += qty;
-    } else {
-      cart.push({ ...product, qty });
-    }
+    <!-- Stock Management Page -->
+    <div id="stock-page" class="page p-6 hidden">
+        <div id="stock-login" class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 text-center">🔒 เข้าสู่ระบบจัดการสต็อก</h2>
+            <input type="password" id="stock-password" placeholder="รหัสผ่าน" 
+                class="w-full p-3 border border-gray-300 rounded-lg mb-4">
+            <button onclick="checkStockPassword()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">
+                เข้าสู่ระบบ
+            </button>
+        </div>
 
-    renderCart();
-  }
+        <div id="stock-management" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4">➕ เพิ่มสินค้าใหม่</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <input type="text" id="new-product-name" placeholder="ชื่อสินค้า" class="p-2 border border-gray-300 rounded-lg">
+                    <input type="text" id="new-product-code" placeholder="รหัสสินค้า" class="p-2 border border-gray-300 rounded-lg">
+                    <input type="number" id="new-product-price" placeholder="ราคา" class="p-2 border border-gray-300 rounded-lg">
+                    <input type="number" id="new-product-stock" placeholder="จำนวนสต็อก" class="p-2 border border-gray-300 rounded-lg">
+                </div>
+                <div class="mt-4">
+                    <input type="file" id="new-product-image" accept="image/*" class="mb-2">
+                    <button onclick="addNewProduct()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold">
+                        เพิ่มสินค้า
+                    </button>
+                </div>
+            </div>
 
-  function renderCart() {
-    const tbody = document.querySelector("#cart-table tbody"); 
-    tbody.innerHTML = "";
-    let total = 0;
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">📦 รายการสินค้าในสต็อก</h2>
+                <div id="stock-list" class="overflow-x-auto">
+                    <!-- Stock items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-    cart.forEach(item => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${item.name}</td>
-        <td>${item.qty}</td>
-        <td>${item.price * item.qty}</td>
-      `;
-      tbody.appendChild(tr);
-      total += item.price * item.qty;
-    });
+    <!-- Sales History Page -->
+    <div id="history-page" class="page p-6 hidden">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">📊 ประวัติการขาย</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <input type="date" id="history-date" class="p-2 border border-gray-300 rounded-lg">
+                <input type="text" id="history-search" placeholder="ค้นหาหมายเลขใบเสร็จ..." class="p-2 border border-gray-300 rounded-lg">
+                <button onclick="searchHistory()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
+                    🔍 ค้นหา
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <button onclick="exportCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold mr-2">
+                    📤 ส่งออก CSV
+                </button>
+                <button onclick="clearHistory()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold">
+                    🗑️ ลบประวัติ
+                </button>
+            </div>
+            
+            <div id="history-list" class="overflow-x-auto">
+                <!-- History items will be loaded here -->
+            </div>
+        </div>
+    </div>
 
-    document.getElementById("total").textContent = total;
-  }
+    <!-- Settings Page -->
+    <div id="settings-page" class="page p-6 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Google Sheets Integration -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">☁️ การเชื่อมต่อ Google Sheets</h2>
+                
+                <div class="mb-4">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="enable-sheets" class="rounded" onchange="toggleSheetsIntegration()">
+                        <span>เปิดใช้งานการเชื่อมต่อ Google Sheets</span>
+                    </label>
+                </div>
+                
+                <div id="sheets-config" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Spreadsheet ID:</label>
+                        <input type="text" id="spreadsheet-id" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" 
+                            class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                        <p class="text-xs text-gray-500 mt-1">คัดลอกจาก URL ของ Google Sheets</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">API Key:</label>
+                        <input type="password" id="api-key" placeholder="AIzaSyBnNAISIGI_pyhfEFSQF6F6zTADHdUzd9E" 
+                            class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                        <p class="text-xs text-gray-500 mt-1">API Key จาก Google Cloud Console</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Sheet สินค้า:</label>
+                            <input type="text" id="products-sheet" value="Products" 
+                                class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Sheet ประวัติ:</label>
+                            <input type="text" id="history-sheet" value="Sales" 
+                                class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="testConnection()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+                            🔗 ทดสอบการเชื่อมต่อ
+                        </button>
+                        <button onclick="testSimpleConnection()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+                            🔍 ทดสอบแบบง่าย
+                        </button>
+                        <button onclick="syncData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+                            🔄 ซิงค์ข้อมูล
+                        </button>
+                        <button onclick="loadProductsFromGoogleSheets()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+                            📥 โหลดสินค้า
+                        </button>
+                        <button onclick="backupToGoogleSheets()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+                            💾 สำรองข้อมูล
+                        </button>
+                        <button onclick="openGoogleAppsScript()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">
+                            🌐 เปิด Apps Script
+                        </button>
+                    </div>
+                    
+                    <div id="sync-status" class="text-sm text-gray-600">
+                        <!-- Sync status will appear here -->
+                    </div>
+                </div>
+                
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                    <h3 class="font-semibold text-blue-800 mb-2">🔗 การเชื่อมต่อ Google Apps Script:</h3>
+                    <div class="text-sm text-blue-700 space-y-2">
+                        <p><strong>URL ที่ใช้:</strong> <code class="bg-blue-100 px-2 py-1 rounded text-xs">https://script.google.com/macros/s/1pGOWYeum1jLO5gpvr9u3jYzC2b0M4bCcnFLphjuJLW8/exec</code></p>
+                        
+                        <div class="mt-3">
+                            <p><strong>ฟีเจอร์ที่รองรับ:</strong></p>
+                            <ul class="list-disc list-inside ml-2 space-y-1">
+                                <li>✅ ทดสอบการเชื่อมต่อ (Test Connection)</li>
+                                <li>✅ ซิงค์ข้อมูลสินค้าและการขาย</li>
+                                <li>✅ โหลดสินค้าจาก Google Sheets</li>
+                                <li>✅ สำรองข้อมูลทั้งหมด</li>
+                                <li>✅ รายงานยอดขายรายวัน</li>
+                                <li>✅ สินค้าขายดี</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-3 p-2 bg-green-100 rounded">
+                            <p class="text-green-800"><strong>💡 เคล็ดลับ:</strong> ระบบจะซิงค์ข้อมูลอัตโนมัติทุก 5 นาทีเมื่อเชื่อมต่อสำเร็จ</p>
+                        </div>
+                        
+                        <div class="mt-3 p-3 bg-yellow-50 rounded border-l-4 border-yellow-400">
+                            <h4 class="font-semibold text-yellow-800 mb-2">🔧 วิธีแก้ไขปัญหาการเชื่อมต่อ:</h4>
+                            <div class="text-sm text-yellow-700 space-y-2">
+                                <p><strong>1. ตรวจสอบ Google Apps Script:</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>คลิก "🌐 เปิด Apps Script" เพื่อตรวจสอบโค้ด</li>
+                                    <li>ตรวจสอบว่า Script ถูก Deploy แล้ว</li>
+                                    <li>ตั้งค่า Execute as: "Me" และ Access: "Anyone"</li>
+                                </ul>
+                                
+                                <p><strong>2. ลองทดสอบ:</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>กด "🔍 ทดสอบแบบง่าย" ก่อน</li>
+                                    <li>ถ้าไม่ได้ ให้กด "🔗 ทดสอบการเชื่อมต่อ"</li>
+                                    <li>ตรวจสอบ Console ใน Developer Tools (F12)</li>
+                                </ul>
+                                
+                                <p><strong>3. ปัญหาที่พบบ่อย:</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>Script ยังไม่ได้ Deploy หรือ Deploy ไม่ถูกต้อง</li>
+                                    <li>สิทธิ์การเข้าถึงไม่ถูกต้อง</li>
+                                    <li>URL ไม่ถูกต้องหรือหมดอายุ</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Shop Settings -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">⚙️ ตั้งค่าระบบ</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-medium mb-2">🏪 ข้อมูลร้านค้า</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <input type="text" id="shop-name" placeholder="ชื่อร้าน" class="p-2 border border-gray-300 rounded-lg">
+                            <input type="text" id="shop-address" placeholder="ที่อยู่" class="p-2 border border-gray-300 rounded-lg">
+                            <input type="text" id="shop-phone" placeholder="เบอร์โทร" class="p-2 border border-gray-300 rounded-lg">
+                            <input type="text" id="shop-tax" placeholder="เลขประจำตัวผู้เสียภาษี" class="p-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-medium mb-2">🔒 เปลี่ยนรหัสผ่าน</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <input type="password" id="current-password" placeholder="รหัสผ่านปัจจุบัน" class="p-2 border border-gray-300 rounded-lg">
+                            <input type="password" id="new-password" placeholder="รหัสผ่านใหม่" class="p-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <button onclick="changePassword()" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
+                            เปลี่ยนรหัสผ่าน
+                        </button>
+                    </div>
+                    
+                    <button onclick="saveSettings()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
+                        💾 บันทึกการตั้งค่า
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  function addDigit(digit) {
-    const input = document.getElementById("cash-display");
-    if (input.value === "0") {
-      input.value = digit;
-    } else {
-      input.value += digit;
-    }
-  }
+    <!-- Receipt Print Area (Hidden) -->
+    <div id="receipt-print" class="receipt-print hidden">
+        <!-- Receipt content will be generated here -->
+    </div>
 
-  function clearCash() {
-    document.getElementById("cash-display").value = "0";
-  }
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modal-icon" class="modal-icon">✅</div>
+            <div id="modal-title" class="modal-title">สำเร็จ!</div>
+            <div id="modal-message" class="modal-message">การดำเนินการเสร็จสิ้น</div>
+            <div id="modal-buttons" class="flex space-x-2 justify-center">
+                <button id="modal-button" class="modal-button" onclick="closeModal()">ตกลง</button>
+            </div>
+        </div>
+    </div>
 
-  function backspace() {
-    const input = document.getElementById("cash-display");
-    if (input.value.length > 1) {
-      input.value = input.value.slice(0, -1);
-    } else {
-      input.value = "0";
-    }
-  }
-
-  function generateReceipt(cart, totalAmount, cashReceived, time) {
-    return `[ร้านค้า ชิกชิกเก้นฉีก]
-วันที่: ${time}
--------------------------------------
-${cart.map(i => `${i.name.padEnd(10)} x${i.qty} = ${(i.price*i.qty).toString().padStart(6)} บาท`).join("\n")}
--------------------------------------
-รวมทั้งหมด: ${totalAmount} บาท
-รับเงิน: ${cashReceived} บาท
-เงินทอน: ${(cashReceived - totalAmount).toFixed(2)} บาท
-ขอบคุณที่ใช้บริการ!
-`;
-  }
-
-  function checkout() {
-    if (cart.length === 0) {
-      alert("กรุณาเลือกสินค้าก่อนชำระเงิน!");
-      return;
-    }
-
-    const totalAmount = cart.reduce((sum, i) => sum + i.price*i.qty, 0);
-    const cashReceived = parseFloat(document.getElementById("cash-display").value);
-
-    if (isNaN(cashReceived) || cashReceived < totalAmount) {
-      alert("กรุณาระบุจำนวนเงินให้ถูกต้อง!");
-      return;
-    }
-
-    const change = cashReceived - totalAmount;
-    const time = new Date().toLocaleString();
-
-    // สร้างใบเสร็จ
-    const receiptText = generateReceipt(cart, totalAmount, cashReceived, time);
-    document.getElementById("receipt-text").textContent = receiptText;
-
-    // บันทึกประวัติการขาย + ใบเสร็จ
-    salesHistory.push({
-      time,
-      total: totalAmount,
-      received: cashReceived,
-      change: change.toFixed(2),
-      receipt: receiptText
-    });
-    renderHistory();
-
-    // แสดงเงินทอน
-    document.getElementById("change-result").innerHTML =
-      `<strong>เงินทอน:</strong> ${change.toFixed(2)} บาท`;
-
-    // แสดงป็อปอัป "ขอบคุณที่ใช้บริการ"
-    showPopup();
-
-    // เคลียร์ข้อมูล
-    cart = [];
-    clearCash();
-    renderCart();
-  }
-
-  function renderHistory() {
-    const tbody = document.getElementById("history-body");
-    tbody.innerHTML = "";
-
-    salesHistory.forEach((record, index) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${record.time}</td>
-        <td>${record.total}</td>
-        <td>${record.received}</td>
-        <td>${record.change}</td>
-        <td>
-          <button onclick="showReceipt(${index})">ดูใบเสร็จ</button>
-          <button onclick="printReceipt(${index})">พิมพ์ใบเสร็จ</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function showReceipt(index) {
-    const receipt = salesHistory[index].receipt;
-    document.getElementById("receipt-text").textContent = receipt;
-  }
-
-  function printReceipt(index) {
-    const receipt = salesHistory[index].receipt;
-
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <pre style="font-size:14px; font-family:monospace;">${receipt}</pre>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-  }
-
-  function showPopup() {
-    const popup = document.getElementById("success-popup");
-    popup.classList.add("show");
-
-    setTimeout(() => {
-      popup.classList.remove("show");
-    }, 500); // ซ่อนหลังจาก 0.5 วินาที
-  }
-
-  window.onload = () => {
-    loadProducts();
-  };
-</script>
+    <script src="script-tess.js"></script>
 
 </body>
 </html>
