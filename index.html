@@ -137,6 +137,9 @@
     </div>
 
 <script>
+// =================================================================
+// SECTION: การตั้งค่าและค่าคงที่ (Configuration & Constants)
+// =================================================================
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHrURcZX9VNb1_Lic7BAxtBKGpTYwdLFDO8urZvWaEsRcSmgrgNvTANgc9QxXROyX6/exec';
 
     const products = [
@@ -146,10 +149,24 @@
         { id: 'extra_noodle', name: 'เพิ่มเส้นหมี่ขาว', price: 10, emoji: '🍝', requiresType: false }
     ];
 
+    // --- NEW: ตั้งค่าเสียงแจ้งเตือน ---
+    // หมายเหตุ: กรุณาเปลี่ยน 'path/to/sound.mp3' เป็นที่อยู่ไฟล์เสียงของคุณจริงๆ
+    // คุณสามารถหาไฟล์เสียง .mp3 ฟรีได้จากเว็บไซต์ต่างๆ เช่น pixabay.com
+    const addToCartSound = new Audio('https://www.myinstants.com/media/sounds/mouse-click.mp3'); // เสียงคลิก
+    const saleSuccessSound = new Audio('https://www.myinstants.com/media/sounds/cash-register-sound-effect-freetamilringtone-com.mp3'); // เสียงเก็บเงิน
+    const errorSound = new Audio('https://www.myinstants.com/media/sounds/error_CDYT56I.mp3'); // เสียงเตือน
+    const deleteSound = new Audio('https://www.myinstants.com/media/sounds/trash-can-sound.mp3'); // เสียงลบ
+
+// =================================================================
+// SECTION: การจัดการสถานะของแอปพลิเคชัน (Application State)
+// =================================================================
     let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
     let cart = [];
     let bluetoothCharacteristic = null;
 
+// =================================================================
+// SECTION: การเข้าถึง DOM Elements
+// =================================================================
     const saleTab = document.getElementById('saleTab');
     const historyTab = document.getElementById('historyTab');
     const saleForm = document.getElementById('saleForm');
@@ -169,6 +186,9 @@
     const salesHistoryContainer = document.getElementById('salesHistory');
     const searchInput = document.getElementById('searchInput');
 
+// =================================================================
+// SECTION: การตั้งค่าเริ่มต้นและ Event Listeners
+// =================================================================
     document.addEventListener('DOMContentLoaded', () => {
         renderProductButtons();
         updateCartDisplay();
@@ -227,9 +247,13 @@
         }
     });
 
-    // --- NEW: Event listener for search input ---
     searchInput.addEventListener('input', displayHistory);
 
+// =================================================================
+// SECTION: ฟังก์ชันหลักของแอปพลิเคชัน (Core Application Logic)
+// =================================================================
+
+    // --- Function: การจัดการแท็บ (Tab Management) ---
     function renderProductButtons() {
         productGrid.innerHTML = products.map(product => `
             <button type="button" class="add-product-btn p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-colors text-left" 
@@ -255,6 +279,7 @@
         }
     }
 
+    // --- Function: การจัดการตะกร้าสินค้า (Cart Management) ---
     function addToCart(product, type = '') {
         const existingItem = cart.find(item => item.product === product.name && item.type === type);
         if (existingItem) {
@@ -269,10 +294,14 @@
                 quantity: 1
             });
         }
+        addToCartSound.play(); // NEW: เล่นเสียง
         updateCartDisplay();
     }
 
     function clearCart() {
+        if (cart.length > 0) {
+            deleteSound.play(); // NEW: เล่นเสียง
+        }
         cart = [];
         updateCartDisplay();
     }
@@ -326,6 +355,7 @@
         calculateChange();
     }
     
+    // --- Function: การคำนวณและการส่งฟอร์ม (Calculation & Form Submission) ---
     function calculateChange() {
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const received = parseFloat(receivedAmountInput.value) || 0;
@@ -351,6 +381,7 @@
         e.preventDefault();
         
         if (cart.length === 0) {
+            errorSound.play(); // NEW: เล่นเสียง
             alert('⚠️ กรุณาเลือกสินค้าก่อนบันทึกการขาย');
             return;
         }
@@ -359,6 +390,7 @@
         const received = parseFloat(receivedAmountInput.value) || 0;
         
         if (received < total) {
+            errorSound.play(); // NEW: เล่นเสียง
             alert('⚠️ จำนวนเงินที่รับไม่เพียงพอ');
             return;
         }
@@ -378,6 +410,8 @@
         salesData.push(saleRecord);
         localStorage.setItem('salesData', JSON.stringify(salesData));
         saveToGoogleSheets(saleRecord);
+        
+        saleSuccessSound.play(); // NEW: เล่นเสียง
 
         showPrintChoiceModal(saleRecord);
 
@@ -386,6 +420,7 @@
         updateCartDisplay();
     }
 
+    // --- Function: การจัดการ Modal (Modal Dialogs) ---
     function showTypeSelectionModal(product) {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
@@ -447,7 +482,8 @@
         document.getElementById('close-modal-btn').addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     }
-    
+
+    // --- Function: การเชื่อมต่อ Google Sheets (Google Sheets Integration) ---
     function checkGoogleScriptUrl() {
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) {
             googleSheetStatus.textContent = '(⚠️ ยังไม่ได้ตั้งค่า Google Apps Script)';
@@ -474,7 +510,8 @@
             googleSheetStatus.className = 'text-xs text-red-600 text-center mt-1';
         }
     }
-
+    
+    // --- Function: การพิมพ์ผ่าน Bluetooth (Bluetooth Printing) ---
     const Tis620Encoder = {
         encode: function(str) {
             const buffer = [];
@@ -577,7 +614,8 @@
             alert('❌ เกิดข้อผิดพลาดในการพิมพ์ใบเสร็จ: ' + error.message);
         }
     }
-
+    
+    // --- Function: การพิมพ์ผ่าน PC (PC / Fallback Printing) ---
     function printReceiptPC(saleRecord) {
         const receiptContainer = document.getElementById('receipt-for-pc');
         const saleDate = new Date(saleRecord.timestamp);
@@ -618,8 +656,8 @@
         if (bluetoothCharacteristic) printReceiptBluetooth(saleRecord);
         else printReceiptPC(saleRecord);
     }
-
-    // --- MODIFIED: Added search functionality ---
+    
+    // --- Function: การจัดการประวัติการขาย (Sales History Management) ---
     function displayHistory() {
         const todayTotalEl = document.getElementById('todayTotal');
         const noHistoryEl = document.getElementById('noHistory');
@@ -699,21 +737,24 @@
         else alert('ไม่พบรายการขายที่ต้องการพิมพ์');
     }
 
-    // --- MODIFIED: Added password protection for deletion ---
     function deleteSaleRecord(saleId) {
+        // คำเตือน: การใช้รหัสผ่านแบบ Hardcode ไม่ปลอดภัยสำหรับการใช้งานจริง
+        // ควรใช้ระบบยืนยันตัวตนที่ปลอดภัยกว่านี้
         const password = prompt("กรุณากรอกรหัสผ่านเพื่อยืนยันการลบ:");
 
         if (password === null) {
-            return; // User cancelled
+            return; // ผู้ใช้กดยกเลิก
         }
 
         if (password === 'Pass123') {
             if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการขายนี้อย่างถาวร?')) {
                 salesData = salesData.filter(s => s.id !== saleId);
                 localStorage.setItem('salesData', JSON.stringify(salesData));
-                displayHistory(); // Refresh the history view
+                deleteSound.play(); // NEW: เล่นเสียง
+                displayHistory(); // รีเฟรชหน้าประวัติ
             }
         } else {
+            errorSound.play(); // NEW: เล่นเสียง
             alert('รหัสผ่านไม่ถูกต้อง!');
         }
     }
