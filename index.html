@@ -8,10 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Sarabun', sans-serif; box-sizing: border-box; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3); }
+        .gradient-bg { background: linear-gradient(135deg, #7e0707a6 0%, #c50202e5 0%); }
+        .card-bg { background: linear-gradient(135deg, #920101 0%, #8a0000 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgb(116, 0, 0); }
+        .btn-primary { background: linear-gradient(135deg, #7fb600 0%, #0cb606 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgb(81, 255, 0); }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -33,14 +34,14 @@
     <div id="app-container">
         <div class="gradient-bg text-white py-6 px-4">
             <div class="max-w-md mx-auto text-center">
-                <h1 class="text-2xl font-bold mb-2">🍜 ยำหมี่ไก่ฉีก</h1>
-                <p class="text-blue-100">ชิกชิกเก้นฉีก สาขา โลตัสตลาดโซนเหลือง</p>
+                <h1 class="text-2xl font-bold mb-2"> CCKC ชิกชิกเก้นฉีก</h1>
+                <p class="text-blue-100">ขายสินค้า 🍜 ยำหมี่ไก่ฉีก</p>
             </div>
         </div>
 
         <div class="max-w-md mx-auto bg-white card-shadow -mt-4 rounded-t-3xl relative z-10">
             <div class="flex border-b">
-                <button id="saleTab" class="flex-1 py-4 px-6 text-center font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50">📝 บันทึกการขาย</button>
+                <button id="saleTab" class="flex-1 py-4 px-6 text-center font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50">📝 ขายสินค้า</button>
                 <button id="historyTab" class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-blue-600 transition-colors">📊 ประวัติการขาย</button>
             </div>
         </div>
@@ -73,7 +74,7 @@
                 <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
                     <h4 class="font-medium text-gray-700 mb-3">💰 การชำระเงิน</h4>
                     <div class="mb-3">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">รับเงิน (บาท):</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เงินสด (บาท):</label>
                         <input type="number" id="receivedAmount" name="receivedAmount" min="0" step="1" class="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกจำนวนเงินที่รับ">
                     </div>
                     <div class="grid grid-cols-4 gap-2 mb-3">
@@ -97,7 +98,7 @@
             </form>
 
             <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                 <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center">
                     <h4 class="font-medium text-blue-800">🖨️ เครื่องพิมพ์ Bluetooth</h4>
                     <div id="printerStatus" class="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600">ไม่ได้เชื่อมต่อ</div>
                 </div>
@@ -629,24 +630,35 @@
 
         receiptContainer.innerHTML = `
             <div style="text-align: center;">
-                <h3 style="font-size: 12pt; font-weight: bold; margin: 0;">ยำหมี่ไก่ฉีก</h3>
-                <p style="margin: 0 0 5px 0;">ใบเสร็จรับเงินอย่างย่อ</p>
+                <h3 style="font-size: 12pt; font-weight: bold; margin: 0;">ยำหมี่ไก่ฉีก ชิกชิกเก้นฉีก</h3>
+                <p style="margin: 0 0 2px 0;">สาขา โลตัสตลาดโซนเหลือง</p>
+                <p style="margin: 0 0 5px 0;">(ใบเสร็จรับเงินอย่างย่อ)</p>
             </div>
             <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
-            <p style="margin: 0;">เลขที่: ${saleRecord.id}</p>
+            <p style="margin: 0;">เลขที่ใบเสร็จ: ${saleRecord.id}</p>
             <p style="margin: 0;">วันที่: ${saleDate.toLocaleString('th-TH')}</p>
             <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
-            <table style="width: 100%; border-collapse: collapse;">
-                ${itemsHtml}
+            <h3 style="font-size: 10pt; font-weight: bold; margin: 0;">รายการสินค้า</h3>
+            <table style="width: 100%; border-collapse: collapse;">${itemsHtml}
             </table>
             <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
             <table style="width: 100%;">
-                <tr><td>ยอดรวม:</td><td style="text-align: right;">${saleRecord.total.toFixed(2)}</td></tr>
+                <tr style="font-size: 11pt; font-weight: bold;"><td>ยอดรวม:</td><td style="text-align: right;">${saleRecord.total.toFixed(2)}</td></tr>
                 <tr><td>รับเงิน:</td><td style="text-align: right;">${saleRecord.received.toFixed(2)}</td></tr>
-                <tr style="font-weight: bold;"><td>เงินทอน:</td><td style="text-align: right;">${saleRecord.change.toFixed(2)}</td></tr>
+                <tr font-weight: bold;"><td>เงินทอน:</td><td style="text-align: right;">${saleRecord.change.toFixed(2)}</td></tr>
             </table>
             <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
-            <p style="text-align: center; margin: 0;">ขอบคุณที่ใช้บริการ</p>
+            <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 11pt; text-align: center; margin: 0;">ช่องทางการติดต่อ</p>
+            <p style="font-size: 11pt; text-align: center; margin: 0;">โทร: 093-145-0736</p>
+            <p style="font-size: 11pt; text-align: center; margin: 0;">Facebook: ชิกชิกเก้นฉีก</p>
+            <div style="text-align: center; font-size: 8pt; color: #555;">
+                <img src="https://qr-official.line.me/gs/M_830jgqvb_BW.png?oat_content=qr" alt="QR Code" style="display: block; margin: 0px auto; width: 80px; height: 80px;">
+                <p style="margin: 8px 0 0 0;">เพิ่มเพิ่อนทางไลน์</p>
+            </div>
+            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 12pt; text-align: center; margin: 0;">ขอบคุณที่ใช้บริการ</p>
+            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
         `;
         window.print();
     }
@@ -762,4 +774,3 @@
 </script>
 </body>
 </html>
-
