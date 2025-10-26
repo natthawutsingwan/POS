@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บันทึกการขาย - ยำหมี่ไก่ฉีก</title>
+    <title>CCKC ชิกชิกเก้นฉีก</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,8 +11,8 @@
         .gradient-bg { background: linear-gradient(135deg, #7e0707a6 0%, #c50202e5 0%); }
         .card-bg { background: linear-gradient(135deg, #920101 0%, #8a0000 100%); }
         .card-shadow { box-shadow: 0 10px 25px rgb(116, 0, 0); }
-        .btn-primary { background: linear-gradient(135deg, #7fb600 0%, #0cb606 100%); transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgb(81, 255, 0); }
+        .btn-primary { background: linear-gradient(135deg, #0065fd 0%, #0065fd 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px #46ff3f(42, 126, 3); }
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -30,95 +30,96 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-700 min-h-screen">
     <div id="app-container">
         <div class="gradient-bg text-white py-6 px-4">
             <div class="max-w-md mx-auto text-center">
-                <h1 class="text-2xl font-bold mb-2"> CCKC ชิกชิกเก้นฉีก</h1>
-                <p class="text-blue-100">ขายสินค้า 🍜 ยำหมี่ไก่ฉีก</p>
+                <img src="S__63103005.jpg" style="display: block ; margin: 0px auto; width: 20%; height: 20%;">
+                <h1 class="text-2xl font-bold mb-2">🍜 CCKC ชิกชิกเก้นฉีก 🍜 </h1>
+                <p class="text-blue-100">🍜 ขายสินค้า   ยำหมี่ไก่ฉีก 🍜</p>
             </div>
         </div>
 
-        <div class="max-w-md mx-auto bg-white card-shadow -mt-4 rounded-t-3xl relative z-10">
-            <div class="flex border-b">
-                <button id="saleTab" class="flex-1 py-4 px-6 text-center font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50">📝 ขายสินค้า</button>
-                <button id="historyTab" class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-blue-600 transition-colors">📊 ประวัติการขาย</button>
+        <div class="max-w-md mx-auto bg-gray-900 card-shadow -mt-4 rounded-t-3xl relative z-10">
+            <div class="flex border-b border-gray-700">
+                <button id="saleTab" class="flex-1 py-4 px-6 text-center font-medium text-blue-400 border-b-2 border-blue-400 bg-gray-800">📝 ขายสินค้า</button>
+                <button id="historyTab" class="flex-1 py-4 px-6 text-center font-medium text-gray-400 hover:text-blue-400 transition-colors">📊 ประวัติการขาย</button>
             </div>
         </div>
 
-        <div id="saleForm" class="max-w-md mx-auto bg-white card-shadow rounded-b-3xl p-6 fade-in">
+        <div id="saleForm" class="max-w-md mx-auto bg-gray-900 card-shadow rounded-b-3xl p-6 fade-in">
             <form id="salesForm" class="space-y-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">เลือกรายการอาหาร:</label>
+                    <label class="block text-sm font-medium text-gray-300 mb-3">เลือกรายการอาหาร:</label>
                     <div id="product-grid" class="grid grid-cols-2 gap-3">
                         </div>
                 </div>
 
                 <div id="cartSection" class="hidden">
-                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-200">
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
                         <div class="flex justify-between items-center mb-3">
-                            <h4 class="font-medium text-gray-700">🛒 ตะกร้าสินค้า</h4>
-                            <button type="button" id="clearCart" class="text-sm text-red-600 hover:text-red-800">ล้างทั้งหมด</button>
+                            <h4 class="font-medium text-gray-200">🛒 ตะกร้าสินค้า</h4>
+                            <button type="button" id="clearCart" class="text-sm text-red-400 hover:text-red-500">ล้างทั้งหมด</button>
                         </div>
                         <div id="cartItems" class="space-y-2"></div>
                     </div>
                 </div>
 
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
                     <div class="flex justify-between items-center">
-                        <span class="font-medium text-gray-700">ยอดรวม:</span>
-                        <span id="totalAmount" class="text-2xl font-bold text-blue-600">0 บาท</span>
+                        <span class="font-medium text-gray-200">ยอดรวม:</span>
+                        <span id="totalAmount" class="text-2xl font-bold text-blue-400">0 บาท</span>
                     </div>
                 </div>
 
-                <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
-                    <h4 class="font-medium text-gray-700 mb-3">💰 การชำระเงิน</h4>
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                    <h4 class="font-medium text-gray-200 mb-3">💰 การชำระเงิน</h4>
                     <div class="mb-3">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">เงินสด (บาท):</label>
-                        <input type="number" id="receivedAmount" name="receivedAmount" min="0" step="1" class="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกจำนวนเงินที่รับ">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">เงินสด (บาท):</label>
+                        <input type="number" id="receivedAmount" name="receivedAmount" min="0" step="1" class="w-full bg-gray-700 text-white border border-gray-600 rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกจำนวนเงินที่รับ">
                     </div>
                     <div class="grid grid-cols-4 gap-2 mb-3">
-                        <button type="button" class="quick-amount bg-gray-100 hover:bg-gray-200 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="50">50</button>
-                        <button type="button" class="quick-amount bg-gray-100 hover:bg-gray-200 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="100">100</button>
-                        <button type="button" class="quick-amount bg-gray-100 hover:bg-gray-200 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="500">500</button>
-                        <button type="button" class="quick-amount bg-gray-100 hover:bg-gray-200 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="1000">1000</button>
+                        <button type="button" class="quick-amount bg-gray-700 text-gray-200 hover:bg-gray-600 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="50">50</button>
+                        <button type="button" class="quick-amount bg-gray-700 text-gray-200 hover:bg-gray-600 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="100">100</button>
+                        <button type="button" class="quick-amount bg-gray-700 text-gray-200 hover:bg-gray-600 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="500">500</button>
+                        <button type="button" class="quick-amount bg-gray-700 text-gray-200 hover:bg-gray-600 py-2 px-3 rounded-lg text-sm font-medium transition-colors" data-amount="1000">1000</button>
                     </div>
                     <div id="changeDisplay" class="hidden">
-                        <div class="flex justify-between items-center p-3 bg-green-100 rounded-lg border border-green-300">
-                            <span class="font-medium text-green-800">เงินทอน:</span>
-                            <span id="changeAmount" class="text-xl font-bold text-green-700">0 บาท</span>
+                        <div class="flex justify-between items-center p-3 bg-green-900 bg-opacity-50 rounded-lg border border-green-700">
+                            <span class="font-medium text-green-300">เงินทอน:</span>
+                            <span id="changeAmount" class="text-xl font-bold text-green-400">0 บาท</span>
                         </div>
                     </div>
-                    <div id="insufficientWarning" class="hidden p-3 bg-red-100 rounded-lg border border-red-300">
-                        <p class="text-sm text-red-700 text-center">⚠️ จำนวนเงินไม่เพียงพอ</p>
+                    <div id="insufficientWarning" class="hidden p-3 bg-red-900 bg-opacity-50 rounded-lg border border-red-700">
+                        <p class="text-sm text-red-400 text-center">⚠️ จำนวนเงินไม่เพียงพอ</p>
                     </div>
                 </div>
 
                 <button type="submit" class="w-full btn-primary text-white py-3 px-6 rounded-xl font-medium">💾 บันทึกการขาย</button>
             </form>
 
-            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <div class="mt-6 p-4 bg-gray-800 border border-gray-700 rounded-xl">
                 <div class="flex justify-between items-center">
-                    <h4 class="font-medium text-blue-800">🖨️ เครื่องพิมพ์ Bluetooth</h4>
-                    <div id="printerStatus" class="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600">ไม่ได้เชื่อมต่อ</div>
+                    <h4 class="font-medium text-blue-300">🖨️ เครื่องพิมพ์ Bluetooth</h4>
+                    <div id="printerStatus" class="text-xs px-2 py-1 rounded-full bg-gray-700 text-gray-300">ไม่ได้เชื่อมต่อ</div>
                 </div>
                 <button id="connectPrinter" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors mt-2">📱 เชื่อมต่อเครื่องพิมพ์</button>
             </div>
 
-            <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
-                <p class="text-sm text-green-700 text-center">📊 ข้อมูลจะถูกบันทึกลง Google Sheets อัตโนมัติ</p>
+            <div class="mt-4 p-4 bg-gray-800 border border-gray-700 rounded-xl">
+                <p class="text-sm text-green-400 text-center">📊 ข้อมูลจะถูกบันทึกลง Google Sheets อัตโนมัติ</p>
                 <p id="googleSheetStatus" class="text-xs text-center mt-1"></p>
             </div>
         </div>
 
-        <div id="historyView" class="max-w-md mx-auto bg-white card-shadow rounded-b-3xl p-6 hidden">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">📊 ประวัติการขาย</h3>
-            <div class="bg-gradient-to-r from-green-50 to-blue-50 p-3 rounded-lg mb-4">
-                <p class="text-sm text-gray-600 text-center">ยอดขายวันนี้: <span id="todayTotal" class="font-bold text-green-600">0 บาท</span></p>
+        <div id="historyView" class="max-w-md mx-auto bg-gray-900 card-shadow rounded-b-3xl p-6 hidden">
+            <h3 class="text-lg font-semibold text-gray-200 mb-2 text-center">📊 ประวัติการขาย</h3>
+            <div class="bg-gray-800 p-3 rounded-lg mb-4">
+                <p class="text-sm text-gray-300 text-center">ยอดขายวันนี้: <span id="todayTotal" class="font-bold text-green-400">0 บาท</span></p>
             </div>
             
             <div class="relative mb-4">
-                <input type="text" id="searchInput" placeholder="ค้นหาตาม ID, รายการอาหาร..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <input type="text" id="searchInput" placeholder="ค้นหาตาม ID, รายการอาหาร..." class="w-full pl-10 pr-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
@@ -143,20 +144,22 @@
 // =================================================================
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHrURcZX9VNb1_Lic7BAxtBKGpTYwdLFDO8urZvWaEsRcSmgrgNvTANgc9QxXROyX6/exec';
 
+    // <<< แก้ไข: อัปเดตรายการสินค้า
     const products = [
-        { id: 'yum_mee', name: 'ยำหมี่ไก่ฉีก', price: 50, emoji: '🍜', requiresType: true },
+        { id: 'yum_mee_50', name: 'ยำหมี่ไก่ฉีก (50 บาท)', price: 50, emoji: '🍜', requiresType: true }, // ปรับชื่อและ ID
+        { id: 'yum_mee_30', name: 'ยำหมี่ไก่ฉีก (30 บาท)', price: 30, emoji: '🍜', requiresType: true }, // <<< เพิ่มรายการใหม่
+        { id: 'drinking_water', name: 'น้ำดื่ม', price: 10, emoji: '💧', requiresType: false }, 
         { id: 'pork_crackling', name: 'น้ำพริกกากหมู', price: 15, emoji: '🌶️', requiresType: false },
         { id: 'extra_chicken', name: 'เพิ่มไก่ฉีก', price: 10, emoji: '🍗', requiresType: false },
         { id: 'extra_noodle', name: 'เพิ่มเส้นหมี่ขาว', price: 10, emoji: '🍝', requiresType: false }
+        // เพิ่มสินค้าอื่นๆ ได้ที่นี่
+        
     ];
 
-    // --- NEW: ตั้งค่าเสียงแจ้งเตือน ---
-    // หมายเหตุ: กรุณาเปลี่ยน 'path/to/sound.mp3' เป็นที่อยู่ไฟล์เสียงของคุณจริงๆ
-    // คุณสามารถหาไฟล์เสียง .mp3 ฟรีได้จากเว็บไซต์ต่างๆ เช่น pixabay.com
-    const addToCartSound = new Audio('button.mp3'); // เสียงคลิก
-    const saleSuccessSound = new Audio('cash.mp3'); // เสียงเก็บเงิน
-    const errorSound = new Audio('Del.mp3'); // เสียงเตือน
-    const deleteSound = new Audio('error.mp3'); // เสียงลบ
+    const addToCartSound = new Audio('button.mp3');
+    const saleSuccessSound = new Audio('cash.mp3');
+    const errorSound = new Audio('Del.mp3');
+    const deleteSound = new Audio('error.mp3');
 
 // =================================================================
 // SECTION: การจัดการสถานะของแอปพลิเคชัน (Application State)
@@ -208,11 +211,7 @@
         if (productBtn) {
             const productId = productBtn.dataset.productId;
             const product = products.find(p => p.id === productId);
-            if (product.requiresType) {
-                showTypeSelectionModal(product);
-            } else {
-                addToCart(product);
-            }
+            showQuantityModal(product); 
         }
     });
     
@@ -254,37 +253,36 @@
 // SECTION: ฟังก์ชันหลักของแอปพลิเคชัน (Core Application Logic)
 // =================================================================
 
-    // --- Function: การจัดการแท็บ (Tab Management) ---
     function renderProductButtons() {
         productGrid.innerHTML = products.map(product => `
-            <button type="button" class="add-product-btn p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-colors text-left" 
+            <button type="button" class="add-product-btn p-3 border border-gray-700 rounded-lg hover:bg-gray-800 hover:border-blue-500 cursor-pointer transition-colors text-left" 
                     data-product-id="${product.id}">
-                <div class="font-medium text-gray-800">${product.emoji} ${product.name}</div>
-                <div class="text-sm text-blue-600 font-semibold">${product.price} บาท</div>
+                <div class="font-medium text-white">${product.emoji} ${product.name}</div>
+                <div class="text-sm text-blue-400 font-semibold">${product.price} บาท</div>
             </button>
         `).join('');
     }
 
     function switchTab(tab) {
         if (tab === 'sale') {
-            saleTab.className = 'flex-1 py-4 px-6 text-center font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50';
-            historyTab.className = 'flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-blue-600 transition-colors';
+            saleTab.className = 'flex-1 py-4 px-6 text-center font-medium text-blue-400 border-b-2 border-blue-400 bg-gray-800';
+            historyTab.className = 'flex-1 py-4 px-6 text-center font-medium text-gray-400 hover:text-blue-400 transition-colors';
             saleForm.classList.remove('hidden');
             historyView.classList.add('hidden');
         } else {
-            historyTab.className = 'flex-1 py-4 px-6 text-center font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50';
-            saleTab.className = 'flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-blue-600 transition-colors';
+            historyTab.className = 'flex-1 py-4 px-6 text-center font-medium text-blue-400 border-b-2 border-blue-400 bg-gray-800';
+            saleTab.className = 'flex-1 py-4 px-6 text-center font-medium text-gray-400 hover:text-blue-400 transition-colors';
             saleForm.classList.add('hidden');
             historyView.classList.remove('hidden');
             displayHistory();
         }
     }
 
-    // --- Function: การจัดการตะกร้าสินค้า (Cart Management) ---
-    function addToCart(product, type = '') {
+    function addToCart(product, type = '', quantity = 1) {
+        // <<< ตรรกะนี้จะทำงานได้อย่างถูกต้องเพราะเราเปลี่ยนชื่อ 'ยำหมี่ไก่ฉีก (50 บาท)' และ 'ยำหมี่ไก่ฉีก (30 บาท)' ให้ต่างกัน
         const existingItem = cart.find(item => item.product === product.name && item.type === type);
         if (existingItem) {
-            existingItem.quantity += 1;
+            existingItem.quantity += quantity; 
         } else {
             cart.push({
                 id: Date.now() + Math.random(),
@@ -292,16 +290,16 @@
                 price: product.price,
                 emoji: product.emoji,
                 type: type,
-                quantity: 1
+                quantity: quantity 
             });
         }
-        addToCartSound.play(); // NEW: เล่นเสียง
+        addToCartSound.play();
         updateCartDisplay();
     }
 
     function clearCart() {
         if (cart.length > 0) {
-            deleteSound.play(); // NEW: เล่นเสียง
+            deleteSound.play();
         }
         cart = [];
         updateCartDisplay();
@@ -334,19 +332,19 @@
 
         cartSection.classList.remove('hidden');
         cartItems.innerHTML = cart.map(item => `
-            <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-200">
+            <div class="flex items-center justify-between bg-gray-900 p-3 rounded-lg border border-gray-700">
                 <div class="flex-1">
-                    <div class="font-medium text-gray-800">
+                    <div class="font-medium text-gray-100">
                         ${item.emoji} ${item.product}
-                        ${item.type ? `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2">${item.type}</span>` : ''}
+                        ${item.type ? `<span class="text-xs bg-blue-900 text-blue-300 px-2 py-1 rounded-full ml-2">${item.type}</span>` : ''}
                     </div>
-                    <div class="text-sm text-gray-600">${item.price} บาท/ชิ้น</div>
+                    <div class="text-sm text-gray-400">${item.price} บาท/ชิ้น</div>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <button type="button" data-action="decrease" data-item-id="${item.id}" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-300">-</button>
-                    <span class="w-8 text-center font-medium">${item.quantity}</span>
-                    <button type="button" data-action="increase" data-item-id="${item.id}" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-300">+</button>
-                    <button type="button" data-action="remove" data-item-id="${item.id}" class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 ml-2">×</button>
+                    <button type="button" data-action="decrease" data-item-id="${item.id}" class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600">-</button>
+                    <span class="w-8 text-center font-medium text-gray-200">${item.quantity}</span>
+                    <button type="button" data-action="increase" data-item-id="${item.id}" class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center text-gray-200 hover:bg-gray-600">+</button>
+                    <button type="button" data-action="remove" data-item-id="${item.id}" class="w-8 h-8 bg-red-900 bg-opacity-40 rounded-full flex items-center justify-center text-red-400 hover:bg-red-800 ml-2">×</button>
                 </div>
             </div>
         `).join('');
@@ -356,7 +354,6 @@
         calculateChange();
     }
     
-    // --- Function: การคำนวณและการส่งฟอร์ม (Calculation & Form Submission) ---
     function calculateChange() {
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const received = parseFloat(receivedAmountInput.value) || 0;
@@ -382,7 +379,7 @@
         e.preventDefault();
         
         if (cart.length === 0) {
-            errorSound.play(); // NEW: เล่นเสียง
+            errorSound.play();
             alert('⚠️ กรุณาเลือกสินค้าก่อนบันทึกการขาย');
             return;
         }
@@ -391,7 +388,7 @@
         const received = parseFloat(receivedAmountInput.value) || 0;
         
         if (received < total) {
-            errorSound.play(); // NEW: เล่นเสียง
+            errorSound.play();
             alert('⚠️ จำนวนเงินที่รับไม่เพียงพอ');
             return;
         }
@@ -412,7 +409,7 @@
         localStorage.setItem('salesData', JSON.stringify(salesData));
         saveToGoogleSheets(saleRecord);
         
-        saleSuccessSound.play(); // NEW: เล่นเสียง
+        saleSuccessSound.play();
 
         showPrintChoiceModal(saleRecord);
 
@@ -421,18 +418,109 @@
         updateCartDisplay();
     }
 
-    // --- Function: การจัดการ Modal (Modal Dialogs) ---
-    function showTypeSelectionModal(product) {
+    function showQuantityModal(product) {
+        const modal = document.createElement('div');
+        modal.id = 'quantityModal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-gray-800 rounded-xl p-6 m-4 max-w-sm w-full fade-in">
+                <h3 class="text-lg font-semibold mb-4 text-white">${product.emoji} ${product.name}</h3>
+                
+                <div id="quantityDisplay" class="text-right text-4xl font-bold text-white bg-gray-700 p-3 rounded-lg mb-4" style="min-height: 64px;">1</div>
+                
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="1">1</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="2">2</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="3">3</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="4">4</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="5">5</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="6">6</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="7">7</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="8">8</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="9">9</button>
+                    <button id="numpadDel" class="w-full py-3 bg-red-800 text-white rounded-lg text-xl font-medium hover:bg-red-700">ลบ</button>
+                    <button class="numpad-btn w-full py-3 bg-gray-700 text-white rounded-lg text-xl font-medium hover:bg-gray-600" data-value="0">0</button>
+                    <button id="numpadClear" class="w-full py-3 bg-yellow-600 text-white rounded-lg text-xl font-medium hover:bg-yellow-500">C</button>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="cancelQtyModal" class="w-full py-3 px-4 border border-gray-500 rounded-lg hover:bg-gray-600 transition-colors text-white">ยกเลิก</button>
+                    <button id="confirmQtyModal" class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors text-white font-medium">ตกลง</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const display = modal.querySelector('#quantityDisplay');
+        let currentQuantityStr = '1';
+        let isDefaultValue = true; 
+
+        const updateDisplay = () => {
+            display.textContent = currentQuantityStr || '0';
+        };
+
+        modal.querySelectorAll('.numpad-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+
+                if (isDefaultValue) {
+                    currentQuantityStr = value; 
+                    isDefaultValue = false;
+                } else if (currentQuantityStr === '0' && value !== '0') {
+                    currentQuantityStr = value; 
+                } else if (currentQuantityStr.length < 5) { 
+                    currentQuantityStr += value; 
+                }
+                updateDisplay();
+            });
+        });
+
+        modal.querySelector('#numpadDel').addEventListener('click', () => {
+            currentQuantityStr = currentQuantityStr.slice(0, -1);
+            if (currentQuantityStr === '') {
+                currentQuantityStr = '1'; 
+                isDefaultValue = true; 
+            } else {
+                isDefaultValue = false;
+            }
+            updateDisplay();
+        });
+
+        modal.querySelector('#numpadClear').addEventListener('click', () => {
+            currentQuantityStr = '1';
+            isDefaultValue = true; 
+            updateDisplay();
+        });
+
+        const closeModal = () => document.body.removeChild(modal);
+
+        modal.querySelector('#cancelQtyModal').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        modal.querySelector('#confirmQtyModal').addEventListener('click', () => {
+            const quantity = parseInt(currentQuantityStr, 10);
+            if (quantity > 0) {
+                if (product.requiresType) {
+                    showTypeSelectionModal(product, quantity); 
+                } else {
+                    addToCart(product, '', quantity); 
+                }
+                closeModal();
+            }
+        });
+    }
+
+    function showTypeSelectionModal(product, quantity) {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
         modal.innerHTML = `
-            <div class="bg-white rounded-xl p-6 m-4 max-w-sm w-full fade-in">
-                <h3 class="text-lg font-semibold mb-4">เลือกประเภท ${product.emoji} ${product.name}</h3>
+            <div class="bg-gray-800 rounded-xl p-6 m-4 max-w-sm w-full fade-in">
+                <h3 class="text-lg font-semibold mb-4 text-white">เลือกประเภท ${product.emoji} ${product.name} (x${quantity})</h3>
                 <div class="space-y-3 mb-6">
-                    <button class="type-btn w-full p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors text-left" data-type="แยกน้ำ">🥗 แยกน้ำ</button>
-                    <button class="type-btn w-full p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors text-left" data-type="ยำเลย">🌶️ ยำเลย</button>
+                    <button class="type-btn w-full p-3 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors text-left text-white" data-type="แยกน้ำ">🥗 แยกน้ำ</button>
+                    <button class="type-btn w-full p-3 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors text-left text-white" data-type="ชุดโรงทาน">ชุดโรงทาน</button>
                 </div>
-                <button id="cancelModal" class="w-full py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">ยกเลิก</button>
+                <button id="cancelModal" class="w-full py-2 px-4 border border-gray-500 rounded-lg hover:bg-gray-600 transition-colors text-white">ยกเลิก</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -441,7 +529,7 @@
         
         modal.querySelectorAll('.type-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                addToCart(product, btn.dataset.type);
+                addToCart(product, btn.dataset.type, quantity); 
                 closeModal();
             });
         });
@@ -459,13 +547,13 @@
         modal.id = modalId;
         modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
         modal.innerHTML = `
-            <div class="bg-white rounded-xl p-6 m-4 max-w-sm w-full fade-in text-center">
+            <div class="bg-gray-800 rounded-xl p-6 m-4 max-w-sm w-full fade-in text-center">
                 <div class="text-5xl mb-3">✅</div>
-                <h3 class="text-lg font-semibold text-gray-800">บันทึกการขายสำเร็จ!</h3>
-                <p class="text-gray-600 mb-6">เงินทอน: <span class="text-2xl font-bold text-green-600">${saleRecord.change}</span> บาท</p>
+                <h3 class="text-lg font-semibold text-gray-100">บันทึกการขายสำเร็จ!</h3>
+                <p class="text-gray-300 mb-6">เงินทอน: <span class="text-2xl font-bold text-green-400">${saleRecord.change}</span> บาท</p>
                 <div class="flex flex-col gap-3">
                     <button id="print-receipt-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">🖨️ พิมพ์ใบเสร็จ</button>
-                    <button id="close-modal-btn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors">ปิด</button>
+                    <button id="close-modal-btn" class="w-full bg-gray-600 hover:bg-gray-500 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors">ปิด</button>
                 </div>
             </div>
         `;
@@ -484,14 +572,13 @@
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     }
 
-    // --- Function: การเชื่อมต่อ Google Sheets (Google Sheets Integration) ---
     function checkGoogleScriptUrl() {
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) {
             googleSheetStatus.textContent = '(⚠️ ยังไม่ได้ตั้งค่า Google Apps Script)';
-            googleSheetStatus.className = 'text-xs text-red-600 text-center mt-1';
+            googleSheetStatus.className = 'text-xs text-red-500 text-center mt-1';
         } else {
             googleSheetStatus.textContent = '(เชื่อมต่อ Google Sheets แล้ว)';
-            googleSheetStatus.className = 'text-xs text-green-600 text-center mt-1';
+            googleSheetStatus.className = 'text-xs text-green-400 text-center mt-1';
         }
     }
 
@@ -508,11 +595,10 @@
         } catch (error) {
             console.error('Error saving to Google Sheets:', error);
             googleSheetStatus.textContent = '(❌ บันทึกไม่สำเร็จ)';
-            googleSheetStatus.className = 'text-xs text-red-600 text-center mt-1';
+            googleSheetStatus.className = 'text-xs text-red-500 text-center mt-1';
         }
     }
     
-    // --- Function: การพิมพ์ผ่าน Bluetooth (Bluetooth Printing) ---
     const Tis620Encoder = {
         encode: function(str) {
             const buffer = [];
@@ -526,41 +612,50 @@
     };
     
     async function connectBluetoothPrinter() {
+        const PRINTER_SERVICE_UUID = '49535343-fe7d-4ae5-8fa9-9fafd205e455';
+        const PRINTER_CHARACTERISTIC_UUID = '49535343-8841-43f4-a8d4-ecbe34729bb3';
+
         try {
             const device = await navigator.bluetooth.requestDevice({
                  acceptAllDevices: true,
-                 optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+                 optionalServices: [PRINTER_SERVICE_UUID]
             });
             const server = await device.gatt.connect();
-            const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
-            const characteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+            const service = await server.getPrimaryService(PRINTER_SERVICE_UUID);
+            const characteristic = await service.getCharacteristic(PRINTER_CHARACTERISTIC_UUID);
             
             bluetoothCharacteristic = characteristic;
             const printerStatus = document.getElementById('printerStatus');
             printerStatus.textContent = 'เชื่อมต่อแล้ว';
-            printerStatus.className = 'text-xs px-2 py-1 rounded-full bg-green-100 text-green-700';
+            printerStatus.className = 'text-xs px-2 py-1 rounded-full bg-green-900 text-green-300';
             
             device.addEventListener('gattserverdisconnected', () => {
                 bluetoothCharacteristic = null;
                 printerStatus.textContent = 'ไม่ได้เชื่อมต่อ';
-                printerStatus.className = 'text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600';
+                printerStatus.className = 'text-xs px-2 py-1 rounded-full bg-gray-700 text-gray-300';
             });
 
         } catch (error) {
             console.error('Error connecting to Bluetooth printer:', error);
-            alert('❌ ไม่สามารถเชื่อมต่อเครื่องพิมพ์ได้: ' + error.message);
+            alert('❌ ไม่สามารถเชื่อมต่อเครื่องพิมพ์ได้: ' + error.message + '\n\nโปรดตรวจสอบว่าเครื่องพิมพ์เปิดอยู่และอยู่ในระยะ');
         }
     }
 
     async function printReceiptBluetooth(saleRecord) {
-        if (!bluetoothCharacteristic) return;
+        if (!bluetoothCharacteristic) {
+            alert("⚠️ ไม่ได้เชื่อมต่อเครื่องพิมพ์ Bluetooth");
+            return;
+        }
         try {
             const encoder = Tis620Encoder;
             const receiptWidth = 32;
 
             const formatLine = (left, right = '') => {
-                const padding = ' '.repeat(Math.max(0, receiptWidth - left.length - right.length));
-                return `${left}${padding}${right}\n`;
+                const leftStr = String(left);
+                const rightStr = String(right);
+                const paddingCount = Math.max(0, receiptWidth - leftStr.length - rightStr.length);
+                const padding = ' '.repeat(paddingCount);
+                return `${leftStr}${padding}${rightStr}\n`;
             };
             
             const commands = {
@@ -569,45 +664,66 @@
                 alignLeft: new Uint8Array([0x1B, 0x61, 0x00]),
                 boldOn: new Uint8Array([0x1B, 0x45, 0x01]),
                 boldOff: new Uint8Array([0x1B, 0x45, 0x00]),
-                fontAOn: new Uint8Array([0x1B, 0x21, 0x00]),
-                fontBOn: new Uint8Array([0x1B, 0x21, 0x01]),
+                fontA: new Uint8Array([0x1B, 0x21, 0x00]),
+                fontB: new Uint8Array([0x1B, 0x21, 0x01]),
                 feedAndCut: new Uint8Array([0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x42, 0x00]),
             };
             
             const send = async (data) => await bluetoothCharacteristic.writeValue(data);
             const sendText = async (text) => await send(encoder.encode(text));
+            const line = '-'.repeat(receiptWidth) + '\n';
 
             await send(commands.init);
+
             await send(commands.alignCenter);
-            await send(commands.fontAOn);
             await send(commands.boldOn);
-            await sendText('ยำหมี่ไก่ฉีก\n');
+            await sendText('ยำหมี่ไก่ฉีก ชิกชิกเก้นฉีก\n');
             await send(commands.boldOff);
-            await sendText('ใบเสร็จรับเงินอย่างย่อ\n');
-            await sendText('-'.repeat(receiptWidth) + '\n');
+            await sendText('สาขา โลตัสตลาดโซนเหลือง\n');
+            await sendText('(ใบเสร็จรับเงินอย่างย่อ)\n');
+            await sendText(line);
             
             await send(commands.alignLeft);
-            await send(commands.fontBOn);
             const saleDate = new Date(saleRecord.timestamp);
-            await sendText(formatLine(`เลขที่: ${saleRecord.id}`));
-            await sendText(formatLine(`วันที่: ${saleDate.toLocaleDateString('th-TH')}`, `${saleDate.toLocaleTimeString('th-TH')}\n`));
-            await sendText('-'.repeat(receiptWidth) + '\n');
+            await sendText(formatLine(`เลขที่ใบเสร็จ: ${saleRecord.id}`));
+            await sendText(formatLine(`วันที่: ${saleDate.toLocaleString('th-TH')}\n`));
+            await sendText(line);
+
+            await send(commands.fontA);
+            await send(commands.boldOn);
+            await sendText('รายการสินค้า\n');
+            await send(commands.boldOff);
 
             for (const item of saleRecord.items) {
-                const itemName = `${item.quantity}x ${item.product}${item.type ? `(${item.type})` : ''}`;
-                const itemPrice = (item.price * item.quantity).toFixed(2);
+                const itemName = `${item.quantity} ${item.product}${item.type ? `(${item.type})` : ''}`;
+                const itemPrice = `${item.price.toFixed(2)} ฿`; 
                 await sendText(formatLine(itemName, itemPrice));
             }
-            await sendText('-'.repeat(receiptWidth) + '\n');
+            await sendText(line);
 
-            await send(commands.fontAOn);
+            await send(commands.fontA);
             await sendText(formatLine('ยอดรวม:', `${saleRecord.total.toFixed(2)}`));
             await sendText(formatLine('รับเงิน:', `${saleRecord.received.toFixed(2)}`));
+            await send(commands.boldOn);
             await sendText(formatLine('เงินทอน:', `${saleRecord.change.toFixed(2)}`));
-            await sendText('-'.repeat(receiptWidth) + '\n\n');
-
+            await send(commands.boldOff);
+            
+            await sendText(line);
+            await sendText(line);
+            
             await send(commands.alignCenter);
-            await sendText('ขอบคุณที่ใช้บริการ\n\n');
+            await sendText('ช่องทางการติดต่อ\n');
+            await sendText('โทร: 093-145-0736\n');
+            await sendText('Facebook: ชิกชิกเก้นฉีก\n');
+
+            await sendText('เพิ่มเพื่อนทางไลน์\n');
+            await sendText(line);
+
+            await send(commands.boldOn);
+            await sendText('ขอบคุณที่ใช้บริการ\n');
+            await send(commands.boldOff);
+            await sendText(line);
+
             await send(commands.feedAndCut);
 
         } catch (error) {
@@ -616,15 +732,18 @@
         }
     }
     
-    // --- Function: การพิมพ์ผ่าน PC (PC / Fallback Printing) ---
     function printReceiptPC(saleRecord) {
         const receiptContainer = document.getElementById('receipt-for-pc');
         const saleDate = new Date(saleRecord.timestamp);
         
         const itemsHtml = saleRecord.items.map(item => `
             <tr>
-                <td style="text-align: left; vertical-align: top; padding-right: 5px;">${item.quantity}x ${item.product} ${item.type ? `(${item.type})` : ''}</td>
-                <td style="text-align: right; vertical-align: top;">${(item.price * item.quantity).toFixed(2)}</td>
+                <td colspan="2" style="padding: 2px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <span style="text-align: left; padding-right: 10px;">${item.quantity} ${item.product} ${item.type ? `(${item.type})` : ''}</span>
+                        <span style="text-align: right; white-space: nowrap;">${item.price.toFixed(2)} ฿</span>
+                    </div>
+                </td>
             </tr>
         `).join('');
 
@@ -669,7 +788,6 @@
         else printReceiptPC(saleRecord);
     }
     
-    // --- Function: การจัดการประวัติการขาย (Sales History Management) ---
     function displayHistory() {
         const todayTotalEl = document.getElementById('todayTotal');
         const noHistoryEl = document.getElementById('noHistory');
@@ -712,18 +830,18 @@
             });
 
             return `
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
                 <div class="flex justify-between items-start mb-2">
                     <div>
-                        <div class="font-semibold text-gray-800">${formattedDateTime}</div>
-                        <div class="text-xs text-gray-500">ID: ${sale.id}</div>
+                        <div class="font-semibold text-gray-200">${formattedDateTime}</div>
+                        <div class="text-xs text-gray-400">ID: ${sale.id}</div>
                     </div>
                     <div class="text-right">
-                        <div class="font-bold text-lg text-blue-600">${sale.total} บาท</div>
-                        <div class="text-xs text-gray-500">รับ: ${sale.received} | ทอน: ${sale.change}</div>
+                        <div class="font-bold text-lg text-blue-400">${sale.total} บาท</div>
+                        <div class="text-xs text-gray-400">รับ: ${sale.received} | ทอน: ${sale.change}</div>
                     </div>
                 </div>
-                <ul class="text-sm text-gray-700 space-y-1 border-t pt-2 mt-2">
+                <ul class="text-sm text-gray-300 space-y-1 border-t border-gray-700 pt-2 mt-2">
                     ${sale.items.map(item => `
                         <li class="flex justify-between">
                             <span>${item.emoji} ${item.quantity}x ${item.product} ${item.type ? `(${item.type})` : ''}</span>
@@ -731,11 +849,11 @@
                         </li>
                     `).join('')}
                 </ul>
-                <div class="border-t mt-3 pt-3 text-right flex justify-end gap-2">
-                    <button data-sale-id="${sale.id}" class="reprint-btn bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium py-1 px-3 rounded-lg transition-colors">
+                <div class="border-t border-gray-700 mt-3 pt-3 text-right flex justify-end gap-2">
+                    <button data-sale-id="${sale.id}" class="reprint-btn bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium py-1 px-3 rounded-lg transition-colors">
                         🖨️ พิมพ์อีกครั้ง
                     </button>
-                    <button data-sale-id="${sale.id}" class="delete-btn bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium py-1 px-3 rounded-lg transition-colors">
+                    <button data-sale-id="${sale.id}" class="delete-btn bg-red-900/50 hover:bg-red-900/70 text-red-400 text-sm font-medium py-1 px-3 rounded-lg transition-colors">
                         🗑️ ลบ
                     </button>
                 </div>
@@ -750,23 +868,17 @@
     }
 
     function deleteSaleRecord(saleId) {
-        // คำเตือน: การใช้รหัสผ่านแบบ Hardcode ไม่ปลอดภัยสำหรับการใช้งานจริง
-        // ควรใช้ระบบยืนยันตัวตนที่ปลอดภัยกว่านี้
         const password = prompt("กรุณากรอกรหัสผ่านเพื่อยืนยันการลบ:");
-
-        if (password === null) {
-            return; // ผู้ใช้กดยกเลิก
-        }
-
+        if (password === null) return;
         if (password === 'Pass123') {
             if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการขายนี้อย่างถาวร?')) {
                 salesData = salesData.filter(s => s.id !== saleId);
                 localStorage.setItem('salesData', JSON.stringify(salesData));
-                deleteSound.play(); // NEW: เล่นเสียง
-                displayHistory(); // รีเฟรชหน้าประวัติ
+                deleteSound.play();
+                displayHistory();
             }
         } else {
-            errorSound.play(); // NEW: เล่นเสียง
+            errorSound.play();
             alert('รหัสผ่านไม่ถูกต้อง!');
         }
     }
