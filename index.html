@@ -368,24 +368,36 @@ function renderHistory() {
     }
 }
 
+// --- พิมพ์ใบเสร็จ ---
 function printPC(record) {
     const container = document.getElementById('receipt-for-pc');
     container.innerHTML = `
         <div style="text-align:center; font-family:'Sarabun'; width:200px; padding:10px; color:black;">
-            <b style="font-size:12pt;">หมี่ไก่ฉีก</b><br>
-            <span style="font-size:8pt;">ชิกชิกเก้นฉีก สาขา แม่โจ้ซอย 9 </span><hr style="border-top:1px dashed #000; margin:5px 0;">
+            <b style="font-size:12pt;">หมี่ไก่ฉีก ชิกชิกเก้นฉีก</b><br>
+            <span style="font-size:8pt;">สาขา แม่โจ้ซอย 9 </span><hr style="border-top:1px dashed #000; margin:8px 0;">
             <div style="font-size:8pt; text-align:left;">
                 ID: ${record.receiptNo}<br>Date: ${new Date(record.timestamp).toLocaleString('th-TH')}
             </div><hr style="border-top:1px dashed #000; margin:5px 0;">
             <table style="width:100%; font-size:8pt; border-collapse: collapse;">
                 ${record.items.map(i => `<tr><td>${i.quantity} x ${i.product}</td><td style="text-align:right;">${(i.price * i.quantity)}</td></tr>`).join('')}
             </table><hr style="border-top:1px dashed #000; margin:5px 0;">
-            <table style="width:100%; font-size:9pt; font-weight:bold;">
+            <table style="width:100%; font-size:8pt; font-weight:bold;">
                 <tr style="font-size:11pt;"><td>TOTAL:</td><td style="text-align:right;">${record.total}.-</td></tr>
                 <tr style="font-weight:normal;"><td>Cash:</td><td style="text-align:right;">${record.received}</td></tr>
                 <tr style="font-weight:normal;"><td>Change:</td><td style="text-align:right;">${record.change}</td></tr>
-            </table><br><center style="font-size:8pt;">THANK YOU!</center>
-        </div>
+            </table>
+            <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 11pt; text-align: center; margin: 0;">ช่องทางการติดต่อ</p>
+            <p style="font-size: 8pt; text-align: center; margin: 0;">โทร: 093-145-0736</p>
+            <p style="font-size: 8pt; text-align: center; margin: 0;">Facebook: ชิกชิกเก้นฉีก</p>
+            <div style="text-align: center; font-size: 8pt; color: #555;">
+                <img src="https://qr-official.line.me/gs/M_830jgqvb_BW.png?oat_content=qr" alt="QR Code" style="display: block; margin: 0px auto; width: 80px; height: 80px;">
+                <p style="margin: 6px 0 0 0;">เพิ่มเพิ่อนทางไลน์</p>
+            </div>
+            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 12pt; text-align: center; margin: 0;">ขอบคุณที่ใช้บริการ</p>
+            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
     `;
     window.print();
 }
@@ -423,4 +435,3 @@ function showGeneralNumpad(title, currentVal, onConfirm) {
 </script>
 </body>
 </html>
-
