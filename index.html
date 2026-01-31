@@ -372,8 +372,8 @@ function printPC(record) {
     const container = document.getElementById('receipt-for-pc');
     container.innerHTML = `
         <div style="text-align:center; font-family:'Sarabun'; width:200px; padding:10px; color:black;">
-            <b style="font-size:12pt;">CCKC ชิกชิกเก้นฉีก</b><br>
-            <span style="font-size:8pt;">Daily POS System</span><hr style="border-top:1px dashed #000; margin:5px 0;">
+            <b style="font-size:12pt;">หมี่ไก่ฉีก</b><br>
+            <span style="font-size:8pt;">ชิกชิกเก้นฉีก สาขา แม่โจ้ซอย 9 </span><hr style="border-top:1px dashed #000; margin:5px 0;">
             <div style="font-size:8pt; text-align:left;">
                 ID: ${record.receiptNo}<br>Date: ${new Date(record.timestamp).toLocaleString('th-TH')}
             </div><hr style="border-top:1px dashed #000; margin:5px 0;">
@@ -423,3 +423,4 @@ function showGeneralNumpad(title, currentVal, onConfirm) {
 </script>
 </body>
 </html>
+
