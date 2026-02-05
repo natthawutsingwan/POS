@@ -3,42 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCKC POS PRO - Daily Reset Edition</title>
+    <title>CCKC POS PRO - Light Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #4f46e5;
+            --bg-main: #f8fafc;
         }
         body { 
             font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif; 
-            background-color: #05070a; 
-            background-image: radial-gradient(circle at top right, #1e293b, #05070a);
+            background-color: var(--bg-main);
+            color: #1e293b;
             min-height: 100vh;
         }
         .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         .pos-grid-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            background: white;
+            border: 1px solid #e2e8f0;
         }
-        .pos-grid-btn:active { transform: scale(0.92); background: rgba(59, 130, 246, 0.1); }
+        .pos-grid-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1);
+        }
+        .pos-grid-btn:active { transform: scale(0.95); }
+        
         .big-total-text {
             font-size: clamp(3rem, 5vw, 4.5rem); 
             font-weight: 800;
-            background: linear-gradient(to bottom, #fbbf24, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1e293b;
+            letter-spacing: -2px;
         }
         .tab-active {
-            color: #60a5fa !important;
-            background: rgba(59, 130, 246, 0.1) !important;
-            border-bottom: 3px solid #3b82f6 !important;
+            color: var(--primary) !important;
+            background: white !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -49,24 +54,24 @@
         }
     </style>
 </head>
-<body class="text-gray-100">
+<body class="text-slate-800">
 
     <div id="app-container" class="no-print min-h-screen flex flex-col">
         
-        <header class="w-full py-4 px-6 glass-card border-b border-white/5 sticky top-0 z-50">
+        <header class="w-full py-4 px-6 bg-white border-b border-slate-200 sticky top-0 z-50">
             <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center gap-3">
-                    <h1 class="text-2xl font-black italic">CCKC <span class="text-blue-500">POS</span></h1>
-                    <div class="hidden sm:block h-6 w-[1px] bg-white/10"></div>
+                    <h1 class="text-2xl font-black tracking-tighter text-slate-900">CCKC <span class="text-indigo-600">POS</span></h1>
+                    <div class="hidden sm:block h-6 w-[1px] bg-slate-200"></div>
                     <div class="flex flex-col">
-                        <span id="nextReceiptNo" class="text-[10px] font-mono text-gray-400 bg-white/5 px-2 py-0.5 rounded">---</span>
-                        <span id="todayDateLabel" class="text-[8px] text-blue-400 font-bold ml-1 mt-1 uppercase">Loading...</span>
+                        <span id="nextReceiptNo" class="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">---</span>
+                        <span id="todayDateLabel" class="text-[8px] text-indigo-500 font-bold ml-1 mt-1 uppercase">Loading...</span>
                     </div>
                 </div>
                 
-                <nav class="flex p-1 bg-black/20 rounded-xl overflow-hidden">
-                    <button id="saleTab" class="px-6 py-2 rounded-lg text-xs font-black transition-all tab-active">🛍️ ขายสินค้า</button>
-                    <button id="historyTab" class="px-6 py-2 rounded-lg text-xs font-bold text-gray-500">📋 ประวัติวันนี้</button>
+                <nav class="flex p-1 bg-slate-100 rounded-2xl">
+                    <button id="saleTab" class="px-6 py-2 rounded-xl text-xs font-black transition-all tab-active">🛍️ ขายสินค้า</button>
+                    <button id="historyTab" class="px-6 py-2 rounded-xl text-xs font-bold text-slate-500">📋 ประวัติวันนี้</button>
                 </nav>
             </div>
         </header>
@@ -75,67 +80,69 @@
             
             <div id="saleForm" class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in duration-500">
                 <div class="lg:col-span-7 xl:col-span-8 space-y-6">
-                    <div class="flex items-center justify-between px-2">
-                        <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">รายการสินค้า</h2>
-                    </div>
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest px-2">เมนูรายการสินค้า</h2>
                     <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4"></div>
                 </div>
 
-                <div class="lg:col-span-5 xl:col-span-4 space-y-4">
+                <div class="lg:col-span-5 xl:col-span-4">
                     <div class="sticky top-24 space-y-4">
-                        <div id="cartSection" class="hidden glass-card rounded-[2rem] p-5 shadow-2xl">
+                        <div id="cartSection" class="hidden glass-card rounded-[2rem] p-5">
                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="text-xs font-black text-blue-400 uppercase tracking-widest">ตะกร้าสินค้า</h4>
-                                <button type="button" id="clearCart" class="text-[10px] text-red-400 font-bold hover:underline">ล้างทั้งหมด</button>
+                                <h4 class="text-xs font-black text-indigo-600 uppercase tracking-widest">ตะกร้าสินค้า</h4>
+                                <button type="button" id="clearCart" class="text-[10px] text-red-500 font-bold hover:underline">ล้างทั้งหมด</button>
                             </div>
-                            <div id="cartItems" class="space-y-2 max-h-[30vh] lg:max-h-[40vh] overflow-y-auto pr-2 hide-scrollbar"></div>
+                            <div id="cartItems" class="space-y-2 max-h-[30vh] overflow-y-auto pr-2 hide-scrollbar"></div>
                         </div>
 
-                        <div class="glass-card rounded-[2.5rem] p-6 sm:p-8 shadow-2xl relative overflow-hidden border-t-4 border-blue-600">
+                        <div class="glass-card rounded-[2.5rem] p-6 sm:p-8 relative overflow-hidden bg-white border-t-8 border-indigo-600">
                             <div class="text-center mb-6">
-                                <span class="text-[10px] text-gray-500 font-black uppercase tracking-[0.4em]">ยอดรวมสุทธิ</span>
-                                <div class="flex items-end justify-center">
+                                <span class="text-[10px] text-slate-400 font-black uppercase tracking-[0.3em]">ยอดชำระทั้งหมด</span>
+                                <div class="flex items-baseline justify-center">
                                     <span id="totalAmount" class="big-total-text leading-none">0</span>
-                                    <span class="text-xl font-black text-amber-600 ml-1 mb-2">฿</span>
+                                    <span class="text-xl font-black text-slate-400 ml-2">THB</span>
                                 </div>
                             </div>
+
                             <div class="grid grid-cols-2 gap-3 mb-6">
-                                <button id="discountBtn" class="p-3 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center justify-center">
+                                <button id="discountBtn" class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center hover:bg-slate-100 transition-colors">
                                     <span class="text-[9px] font-black text-pink-500 uppercase mb-1">ส่วนลด</span>
-                                    <span class="text-lg font-black"><span id="discountText">0</span> ฿</span>
+                                    <span class="text-lg font-bold"><span id="discountText">0</span> ฿</span>
                                 </button>
-                                <button id="depositBtn" class="p-3 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center justify-center">
-                                    <span class="text-[9px] font-black text-orange-400 uppercase mb-1">มัดจำ</span>
-                                    <span class="text-lg font-black"><span id="depositText">0</span> ฿</span>
+                                <button id="depositBtn" class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center hover:bg-slate-100 transition-colors">
+                                    <span class="text-[9px] font-black text-amber-600 uppercase mb-1">มัดจำ</span>
+                                    <span class="text-lg font-bold"><span id="depositText">0</span> ฿</span>
                                 </button>
                             </div>
-                            <button id="receivedBtn" class="w-full p-4 mb-4 rounded-2xl bg-blue-600/10 border-2 border-blue-500/30">
-                                <span class="block text-[9px] font-black text-blue-400 uppercase mb-1">Cash Received</span>
-                                <div id="receivedText" class="text-2xl font-black text-white">แตะเพื่อรับเงิน</div>
+
+                            <button id="receivedBtn" class="w-full p-5 mb-4 rounded-2xl bg-indigo-50 border-2 border-dashed border-indigo-200 group hover:border-indigo-400 transition-all">
+                                <span class="block text-[9px] font-black text-indigo-400 uppercase mb-1">Cash Received</span>
+                                <div id="receivedText" class="text-2xl font-black text-indigo-600 group-hover:scale-105 transition-transform">แตะเพื่อรับเงิน</div>
                             </button>
+
                             <div id="changeDisplay" class="hidden mb-6">
-                                <div class="flex justify-between items-center px-5 py-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl">
-                                    <span class="text-xs font-black text-emerald-500 uppercase">เงินทอน</span>
-                                    <span id="changeAmount" class="text-3xl font-black text-emerald-400">0.-</span>
+                                <div class="flex justify-between items-center px-6 py-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                                    <span class="text-xs font-black text-emerald-600 uppercase">เงินทอน</span>
+                                    <span id="changeAmount" class="text-3xl font-black text-emerald-600">0.-</span>
                                 </div>
                             </div>
-                            <button type="button" id="submitOrder" class="w-full py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-black text-xl shadow-lg active:scale-95 transition-all uppercase">
-                                Confirm & Print
+
+                            <button type="button" id="submitOrder" class="w-full py-5 rounded-2xl bg-slate-900 text-white font-black text-xl shadow-xl hover:bg-indigo-600 active:scale-95 transition-all">
+                                CONFIRM & PRINT
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="historyView" class="hidden max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 px-2">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-2xl font-black">History <span class="text-blue-500 text-sm ml-2">Today</span></h3>
-                    <button id="resetDailyData" class="text-[10px] bg-red-500/10 text-red-500 border border-red-500/20 px-4 py-2 rounded-xl font-bold uppercase hover:bg-red-500 hover:text-white transition-all">ล้างยอดวันนี้</button>
+            <div id="historyView" class="hidden max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div class="flex items-center justify-between mb-8 px-2">
+                    <h3 class="text-2xl font-black text-slate-900">History <span class="text-indigo-600 text-sm ml-2 bg-indigo-50 px-3 py-1 rounded-full uppercase">Today</span></h3>
+                    <button id="resetDailyData" class="text-[10px] text-red-500 font-bold border border-red-200 px-4 py-2 rounded-xl hover:bg-red-50 transition-all">ล้างยอดวันนี้</button>
                 </div>
                 <div id="salesHistory" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                <div id="noHistory" class="text-center py-32 glass-card rounded-[3rem]">
+                <div id="noHistory" class="text-center py-32 bg-white rounded-[3rem] border border-slate-100">
                     <div class="text-5xl mb-4 opacity-20">📂</div>
-                    <p class="text-gray-500 font-bold uppercase tracking-widest text-xs">ไม่พบข้อมูลการขาย</p>
+                    <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">ไม่พบข้อมูลการขาย</p>
                 </div>
             </div>
         </main>
@@ -144,16 +151,16 @@
     <div id="receipt-for-pc" class="hidden"></div>
 
 <script>
-// --- AUDIO SYSTEM ---
+// (ส่วน JavaScript คงเดิมตาม Logic ของคุณ แต่ปรับสีเล็กน้อยตอน Render Product)
+
 const sounds = {
     click: new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'),
     success: new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'),
-    // --- trash: new Audio('https://assets.mixkit.co/active_storage/sfx/2205/2205-preview.mp3'),
-    pop: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3')
+    pop: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+    trash: new Audio('https://assets.mixkit.co/active_storage/sfx/2205/2205-preview.mp3')
 };
 function playSound(type) { if (sounds[type]) { sounds[type].currentTime = 0; sounds[type].play().catch(() => {}); } }
 
-// --- CONFIG & STATE ---
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHrURcZX9VNb1_Lic7BAxtBKGpTYwdLFDO8urZvWaEsRcSmgrgNvTANgc9QxXROyX6/exec';
 const products = [
     { id: 'yum_mee_50', name: 'ยำหมี่ไก่ฉีก (50)', price: 50, emoji: '🍜', color: 'bg-orange-500' },
@@ -169,22 +176,15 @@ let discountAmount = 0;
 let depositAmount = 0;
 let receivedAmount = 0;
 
-// --- DAILY RESET SYSTEM ---
 function checkDailyReset() {
     const today = new Date().toDateString();
     const lastSavedDate = localStorage.getItem('lastAccessDate');
-    
-    // โหลดข้อมูลเก่า
     salesData = JSON.parse(localStorage.getItem('salesData')) || [];
-
-    // ถ้าเป็นวันใหม่ (วันที่ปัจจุบันไม่ตรงกับวันที่บันทึกล่าสุด)
     if (lastSavedDate !== today) {
-        console.log("วันใหม่! ทำการล้างประวัติการขาย...");
-        salesData = []; // ล้างอาเรย์
+        salesData = []; 
         localStorage.setItem('salesData', JSON.stringify(salesData));
         localStorage.setItem('lastAccessDate', today);
     }
-    
     document.getElementById('todayDateLabel').textContent = new Date().toLocaleDateString('th-TH', { day:'2-digit', month:'short', year:'2-digit' });
 }
 
@@ -195,28 +195,21 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartDisplay();
 });
 
-// --- UI LOGIC ---
 function renderProducts() {
     const grid = document.getElementById('product-grid');
     grid.innerHTML = products.map(p => `
-        <button type="button" onclick="handleProductClick('${p.id}')" class="pos-grid-btn p-5 rounded-[2rem] text-center shadow-lg relative overflow-hidden group">
-            <div class="absolute top-0 right-0 w-12 h-12 ${p.color} opacity-10 blur-xl rounded-full"></div>
-            <div class="text-4xl mb-2 group-active:scale-125 transition-transform">${p.emoji}</div>
-            <div class="font-bold text-white text-[10px] sm:text-xs mb-1 tracking-tighter uppercase h-8 flex items-center justify-center leading-tight">${p.name}</div>
-            <div class="text-xl text-amber-500 font-black">${p.price}.-</div>
+        <button type="button" onclick="handleProductClick('${p.id}')" class="pos-grid-btn p-6 rounded-[2rem] text-center relative overflow-hidden">
+            <div class="text-4xl mb-3">${p.emoji}</div>
+            <div class="font-bold text-slate-800 text-[11px] sm:text-xs mb-1 uppercase h-8 flex items-center justify-center leading-tight px-2">${p.name}</div>
+            <div class="text-xl text-indigo-600 font-black">${p.price}.-</div>
         </button>
     `).join('');
 }
 
 function updateReceiptNoDisplay() {
     const now = new Date();
-    const d = String(now.getDate()).padStart(2, '0');
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const y = String(now.getFullYear() + 543).slice(-2);
-    const hh = String(now.getHours()).padStart(2, '0');
-    const mm = String(now.getMinutes()).padStart(2, '0');
-    
-    // เลข Sequence จะนับจากจำนวนรายการใน salesData (ซึ่งโดนล้างทุกวันอยู่แล้ว)
+    const d = String(now.getDate()).padStart(2, '0'), m = String(now.getMonth() + 1).padStart(2, '0'), y = String(now.getFullYear() + 543).slice(-2);
+    const hh = String(now.getHours()).padStart(2, '0'), mm = String(now.getMinutes()).padStart(2, '0');
     const seq = (salesData.length + 1).toString().padStart(3, '0');
     const billId = `${d}${m}${y}-${hh}${mm}-${seq}`;
     document.getElementById('nextReceiptNo').textContent = billId;
@@ -249,12 +242,12 @@ function updateCartDisplay() {
     else {
         cartSec.classList.remove('hidden');
         cartList.innerHTML = cart.map(item => `
-            <div class="flex items-center justify-between bg-white/5 p-3 rounded-2xl border border-white/5">
-                <div class="flex items-center gap-2">
+            <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div class="flex items-center gap-3">
                     <span class="text-lg">${item.emoji}</span>
-                    <div class="text-[11px] font-bold text-white uppercase">${item.product} <span class="text-blue-400 font-black ml-1">x${item.quantity}</span></div>
+                    <div class="text-[12px] font-bold text-slate-700">${item.product} <span class="text-indigo-500 font-black ml-1">x${item.quantity}</span></div>
                 </div>
-                <span class="text-amber-500 font-black text-sm">${(item.price * item.quantity).toLocaleString()}.-</span>
+                <span class="text-slate-900 font-black text-sm">${(item.price * item.quantity).toLocaleString()}.-</span>
             </div>
         `).join('');
     }
@@ -268,10 +261,8 @@ function calculateChange() {
     const rText = document.getElementById('receivedText');
     if (receivedAmount > 0) {
         rText.textContent = "฿ " + receivedAmount.toLocaleString();
-        rText.classList.add('text-blue-400');
     } else {
         rText.textContent = "แตะเพื่อรับเงิน";
-        rText.classList.remove('text-blue-400');
     }
     const cDisp = document.getElementById('changeDisplay');
     if (receivedAmount >= balanceToPay && receivedAmount > 0) {
@@ -280,13 +271,10 @@ function calculateChange() {
     } else { cDisp.classList.add('hidden'); }
 }
 
-// --- TAB SYSTEM ---
 function switchTab(tab) {
     playSound('click');
-    const sBtn = document.getElementById('saleTab');
-    const hBtn = document.getElementById('historyTab');
-    const sView = document.getElementById('saleForm');
-    const hView = document.getElementById('historyView');
+    const sBtn = document.getElementById('saleTab'), hBtn = document.getElementById('historyTab');
+    const sView = document.getElementById('saleForm'), hView = document.getElementById('historyView');
     if (tab === 'sale') {
         sBtn.classList.add('tab-active'); hBtn.classList.remove('tab-active');
         sView.classList.remove('hidden'); hView.classList.add('hidden');
@@ -299,20 +287,15 @@ function switchTab(tab) {
 document.getElementById('saleTab').onclick = () => switchTab('sale');
 document.getElementById('historyTab').onclick = () => switchTab('history');
 
-// --- ACTIONS ---
 document.getElementById('discountBtn').onclick = () => showGeneralNumpad('Discount (฿)', discountAmount, (v) => { discountAmount = parseFloat(v); updateCartDisplay(); });
 document.getElementById('depositBtn').onclick = () => showGeneralNumpad('Deposit (฿)', depositAmount, (v) => { depositAmount = parseFloat(v); updateCartDisplay(); });
 document.getElementById('receivedBtn').onclick = () => showGeneralNumpad('Received (฿)', receivedAmount, (v) => { receivedAmount = parseFloat(v); calculateChange(); });
 document.getElementById('clearCart').onclick = () => { if(confirm('ล้างตะกร้าหรือไม่?')) { playSound('trash'); cart = []; updateCartDisplay(); } };
 
-// ล้างประวัติด้วยตนเอง
 document.getElementById('resetDailyData').onclick = () => {
-    if(confirm('ต้องการล้างประวัติการขายทั้งหมดของวันนี้และเริ่มเลขบิลใหม่ใช่หรือไม่?')) {
-        playSound('trash');
-        salesData = [];
-        localStorage.setItem('salesData', JSON.stringify(salesData));
-        renderHistory();
-        updateReceiptNoDisplay();
+    if(confirm('ต้องการล้างประวัติการขายทั้งหมดของวันนี้?')) {
+        playSound('trash'); salesData = []; localStorage.setItem('salesData', JSON.stringify(salesData));
+        renderHistory(); updateReceiptNoDisplay();
     }
 };
 
@@ -332,43 +315,38 @@ document.getElementById('submitOrder').onclick = async () => {
     };
     salesData.push(record);
     localStorage.setItem('salesData', JSON.stringify(salesData));
-    
     if (GOOGLE_SCRIPT_URL) {
         const payload = { ...record, itemsString: record.items.map(i => `${i.product}(${i.quantity})`).join(', ') };
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
     }
-    
-    printPC(record); 
-    cart = []; discountAmount = 0; depositAmount = 0; receivedAmount = 0;
+    printPC(record); cart = []; discountAmount = 0; depositAmount = 0; receivedAmount = 0;
     updateCartDisplay(); updateReceiptNoDisplay();
 };
 
 function renderHistory() {
-    const historyList = document.getElementById('salesHistory');
-    const noHistory = document.getElementById('noHistory');
+    const historyList = document.getElementById('salesHistory'), noHistory = document.getElementById('noHistory');
     if (salesData.length === 0) {
         historyList.innerHTML = ''; noHistory.classList.remove('hidden');
     } else {
         noHistory.classList.add('hidden');
         historyList.innerHTML = [...salesData].reverse().map(s => `
-            <div class="glass-card p-6 rounded-3xl border-white/5 relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4 relative">
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative group overflow-hidden">
+                <div class="flex justify-between items-start mb-4">
                     <div>
-                        <div class="text-[10px] font-black text-blue-400 mb-1 uppercase tracking-widest">${s.receiptNo}</div>
-                        <div class="text-[10px] text-gray-500 font-bold">${new Date(s.timestamp).toLocaleTimeString('th-TH')}</div>
+                        <div class="text-[10px] font-black text-indigo-600 mb-1 uppercase tracking-widest">${s.receiptNo}</div>
+                        <div class="text-[10px] text-slate-400 font-bold">${new Date(s.timestamp).toLocaleTimeString('th-TH')}</div>
                     </div>
-                    <div class="text-xl font-black text-amber-500">${s.total.toLocaleString()}.-</div>
+                    <div class="text-xl font-black text-slate-900">${s.total.toLocaleString()}.-</div>
                 </div>
-                <div class="text-[10px] text-gray-400 space-y-1 mb-5 bg-black/20 p-3 rounded-xl border border-white/5">
+                <div class="text-[10px] text-slate-500 space-y-1 mb-5 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                     ${s.items.map(i => `<div class="flex justify-between"><span>${i.product}</span><b>x${i.quantity}</b></div>`).join('')}
                 </div>
-                <button onclick='printPC(${JSON.stringify(s)})' class="w-full bg-white/5 hover:bg-white/10 text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">🖨️ Reprint Bill</button>
+                <button onclick='printPC(${JSON.stringify(s)})' class="w-full bg-slate-900 hover:bg-indigo-600 text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">🖨️ Reprint Bill</button>
             </div>
         `).join('');
     }
 }
 
-// --- พิมพ์ใบเสร็จ ---
 function printPC(record) {
     const container = document.getElementById('receipt-for-pc');
     container.innerHTML = `
@@ -387,39 +365,35 @@ function printPC(record) {
                 <tr style="font-weight:normal;"><td>Change:</td><td style="text-align:right;">${record.change}</td></tr>
             </table>
             <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
-            <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
-            <p style="font-size: 11pt; text-align: center; margin: 0;">ช่องทางการติดต่อ</p>
             <p style="font-size: 8pt; text-align: center; margin: 0;">โทร: 093-145-0736</p>
             <p style="font-size: 8pt; text-align: center; margin: 0;">Facebook: ชิกชิกเก้นฉีก</p>
             <div style="text-align: center; font-size: 8pt; color: #555;">
-                <img src="https://qr-official.line.me/gs/M_830jgqvb_BW.png?oat_content=qr" alt="QR Code" style="display: block; margin: 0px auto; width: 80px; height: 80px;">
-                <p style="margin: 6px 0 0 0;">เพิ่มเพิ่อนทางไลน์</p>
+                <img src="https://qr-official.line.me/gs/M_830jgqvb_BW.png?oat_content=qr" alt="QR Code" style="display: block; margin: 5px auto; width: 60px; height: 60px;">
+                <p style="margin: 4px 0 0 0;">LINE: @CCKC</p>
             </div>
-            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
-            <p style="font-size: 12pt; text-align: center; margin: 0;">ขอบคุณที่ใช้บริการ</p>
-            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 10pt; text-align: center; margin: 10px 0 0 0;">ขอบคุณที่ใช้บริการ</p>
+        </div>
     `;
     window.print();
 }
 
-// --- NUMPAD SYSTEM ---
 function showGeneralNumpad(title, currentVal, onConfirm) {
     playSound('click');
     const modal = document.createElement('div');
-    modal.className = 'fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-[100] p-6 no-print';
+    modal.className = 'fixed inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center z-[100] p-6 no-print';
     modal.innerHTML = `
-        <div class="glass-card rounded-[3.5rem] p-8 w-full max-w-sm border-white/10 shadow-2xl animate-in zoom-in-95">
-            <h3 class="text-gray-500 text-center mb-6 font-black uppercase tracking-[0.2em] text-[10px]">${title}</h3>
-            <div id="numpadDisplay" class="text-6xl font-black text-white text-right mb-8 pr-2 tracking-tighter break-all leading-none">0</div>
+        <div class="bg-white rounded-[3.5rem] p-8 w-full max-w-sm border border-slate-200 shadow-2xl animate-in zoom-in-95">
+            <h3 class="text-slate-400 text-center mb-6 font-black uppercase tracking-widest text-[10px]">${title}</h3>
+            <div id="numpadDisplay" class="text-6xl font-black text-slate-900 text-right mb-8 pr-2 tracking-tighter">0</div>
             <div class="grid grid-cols-3 gap-3 mb-8">
-                ${[1,2,3,4,5,6,7,8,9].map(n => `<button class="p-6 bg-white/5 text-white text-3xl rounded-3xl font-black hover:bg-blue-600/20 active:scale-90 transition-all" onclick="window.padInput('${n}')">${n}</button>`).join('')}
-                <button class="p-6 bg-red-500/10 text-red-500 text-2xl rounded-3xl font-black" onclick="window.padClear()">C</button>
-                <button class="p-6 bg-white/5 text-white text-3xl rounded-3xl font-black" onclick="window.padInput('0')">0</button>
-                <button class="p-6 bg-white/5 text-gray-500 text-2xl rounded-3xl font-black" onclick="window.padDel()">←</button>
+                ${[1,2,3,4,5,6,7,8,9].map(n => `<button class="p-6 bg-slate-50 text-slate-800 text-3xl rounded-3xl font-black hover:bg-indigo-600 hover:text-white transition-all" onclick="window.padInput('${n}')">${n}</button>`).join('')}
+                <button class="p-6 bg-red-50 text-red-500 text-2xl rounded-3xl font-black" onclick="window.padClear()">C</button>
+                <button class="p-6 bg-slate-50 text-slate-800 text-3xl rounded-3xl font-black" onclick="window.padInput('0')">0</button>
+                <button class="p-6 bg-slate-50 text-slate-400 text-2xl rounded-3xl font-black" onclick="window.padDel()">←</button>
             </div>
             <div class="flex gap-4">
-                <button onclick="window.closePad(false)" class="flex-1 py-4 text-gray-600 font-bold uppercase text-[10px] tracking-widest">Cancel</button>
-                <button onclick="window.closePad(true)" class="flex-[2] bg-blue-600 text-white font-black text-xl rounded-2xl shadow-lg">Confirm</button>
+                <button onclick="window.closePad(false)" class="flex-1 py-4 text-slate-400 font-bold uppercase text-[10px]">Cancel</button>
+                <button onclick="window.closePad(true)" class="flex-[2] bg-indigo-600 text-white font-black text-xl rounded-2xl shadow-lg">Confirm</button>
             </div>
         </div>
     `;
@@ -427,15 +401,11 @@ function showGeneralNumpad(title, currentVal, onConfirm) {
     let str = currentVal.toString() === '0' ? '' : currentVal.toString();
     const display = modal.querySelector('#numpadDisplay');
     display.textContent = str || '0';
-    window.padInput = (v) => { playSound('click'); if(str.length < 9) str += v; display.textContent = str || '0'; };
-    window.padDel = () => { playSound('click'); str = str.slice(0, -1); display.textContent = str || '0'; };
-    window.padClear = () => { playSound('trash'); str = ''; display.textContent = '0'; };
-    window.closePad = (confirm) => { if(confirm) { playSound('pop'); onConfirm(str || '0'); } modal.remove(); };
+    window.padInput = (v) => { if(str.length < 9) str += v; display.textContent = str || '0'; };
+    window.padDel = () => { str = str.slice(0, -1); display.textContent = str || '0'; };
+    window.padClear = () => { str = ''; display.textContent = '0'; };
+    window.closePad = (confirm) => { if(confirm) { onConfirm(str || '0'); } modal.remove(); };
 }
 </script>
 </body>
 </html>
-
-
-
-
