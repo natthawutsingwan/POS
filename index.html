@@ -43,21 +43,9 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* --- แก้ไขส่วนการพิมพ์ --- */
         @media print {
-            body { background: white !important; color: black !important; background-image: none !important; }
             .no-print { display: none !important; }
-            #receipt-for-pc { 
-                display: block !important; 
-                position: absolute; 
-                top: 0; 
-                left: 0; 
-                width: 100%; 
-                background: white !important; 
-                color: black !important;
-            }
-            /* ลบเงาและตกแต่งส่วนเกินออกเวลาพิมพ์ */
-            * { box-shadow: none !important; text-shadow: none !important; }
+            #receipt-for-pc { display: block !important; position: absolute; top: 0; left: 0; width: 100%; }
         }
     </style>
 </head>
@@ -181,15 +169,22 @@ let discountAmount = 0;
 let depositAmount = 0;
 let receivedAmount = 0;
 
+// --- DAILY RESET SYSTEM ---
 function checkDailyReset() {
     const today = new Date().toDateString();
     const lastSavedDate = localStorage.getItem('lastAccessDate');
+    
+    // โหลดข้อมูลเก่า
     salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+
+    // ถ้าเป็นวันใหม่ (วันที่ปัจจุบันไม่ตรงกับวันที่บันทึกล่าสุด)
     if (lastSavedDate !== today) {
-        salesData = []; 
+        console.log("วันใหม่! ทำการล้างประวัติการขาย...");
+        salesData = []; // ล้างอาเรย์
         localStorage.setItem('salesData', JSON.stringify(salesData));
         localStorage.setItem('lastAccessDate', today);
     }
+    
     document.getElementById('todayDateLabel').textContent = new Date().toLocaleDateString('th-TH', { day:'2-digit', month:'short', year:'2-digit' });
 }
 
@@ -200,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartDisplay();
 });
 
+// --- UI LOGIC ---
 function renderProducts() {
     const grid = document.getElementById('product-grid');
     grid.innerHTML = products.map(p => `
@@ -219,6 +215,8 @@ function updateReceiptNoDisplay() {
     const y = String(now.getFullYear() + 543).slice(-2);
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
+    
+    // เลข Sequence จะนับจากจำนวนรายการใน salesData (ซึ่งโดนล้างทุกวันอยู่แล้ว)
     const seq = (salesData.length + 1).toString().padStart(3, '0');
     const billId = `${d}${m}${y}-${hh}${mm}-${seq}`;
     document.getElementById('nextReceiptNo').textContent = billId;
@@ -282,6 +280,7 @@ function calculateChange() {
     } else { cDisp.classList.add('hidden'); }
 }
 
+// --- TAB SYSTEM ---
 function switchTab(tab) {
     playSound('click');
     const sBtn = document.getElementById('saleTab');
@@ -300,11 +299,13 @@ function switchTab(tab) {
 document.getElementById('saleTab').onclick = () => switchTab('sale');
 document.getElementById('historyTab').onclick = () => switchTab('history');
 
+// --- ACTIONS ---
 document.getElementById('discountBtn').onclick = () => showGeneralNumpad('Discount (฿)', discountAmount, (v) => { discountAmount = parseFloat(v); updateCartDisplay(); });
 document.getElementById('depositBtn').onclick = () => showGeneralNumpad('Deposit (฿)', depositAmount, (v) => { depositAmount = parseFloat(v); updateCartDisplay(); });
 document.getElementById('receivedBtn').onclick = () => showGeneralNumpad('Received (฿)', receivedAmount, (v) => { receivedAmount = parseFloat(v); calculateChange(); });
 document.getElementById('clearCart').onclick = () => { if(confirm('ล้างตะกร้าหรือไม่?')) { playSound('trash'); cart = []; updateCartDisplay(); } };
 
+// ล้างประวัติด้วยตนเอง
 document.getElementById('resetDailyData').onclick = () => {
     if(confirm('ต้องการล้างประวัติการขายทั้งหมดของวันนี้และเริ่มเลขบิลใหม่ใช่หรือไม่?')) {
         playSound('trash');
@@ -367,67 +368,41 @@ function renderHistory() {
     }
 }
 
-// --- ฟังก์ชันพิมพ์ใบเสร็จ (ปรับแก้พื้นหลังขาว ตัวหนังสือดำ) ---
+// --- พิมพ์ใบเสร็จ ---
 function printPC(record) {
     const container = document.getElementById('receipt-for-pc');
     container.innerHTML = `
-        <div style="text-align:center; font-family:'Sarabun', sans-serif; width:220px; padding:10px; color:black; background:white; margin:0 auto;">
-            <b style="font-size:14pt; display:block; margin-bottom:2px;">หมี่ไก่ฉีก ชิกชิกเก้นฉีก</b>
-            <span style="font-size:9pt;">สาขา แม่โจ้ซอย 9 </span>
-            <hr style="border:none; border-top:1px dashed black; margin:10px 0;">
-            
-            <div style="font-size:8pt; text-align:left; line-height:1.4;">
-                <b>ID:</b> ${record.receiptNo}<br>
-                <b>Date:</b> ${new Date(record.timestamp).toLocaleString('th-TH')}
-            </div>
-            
-            <hr style="border:none; border-top:1px dashed black; margin:8px 0;">
-            
-            <table style="width:100%; font-size:9pt; border-collapse: collapse;">
-                ${record.items.map(i => `
-                    <tr>
-                        <td style="padding:2px 0;">${i.product} x ${i.quantity}</td>
-                        <td style="text-align:right; padding:2px 0;">${(i.price * i.quantity).toLocaleString()}</td>
-                    </tr>
-                `).join('')}
+        <div style="text-align:center; font-family:'Sarabun'; width:200px; padding:10px; color:black;">
+            <b style="font-size:12pt;">หมี่ไก่ฉีก ชิกชิกเก้นฉีก</b><br>
+            <span style="font-size:8pt;">สาขา แม่โจ้ซอย 9 </span><hr style="border-top:1px dashed #000; margin:8px 0;">
+            <div style="font-size:8pt; text-align:left;">
+                ID: ${record.receiptNo}<br>Date: ${new Date(record.timestamp).toLocaleString('th-TH')}
+            </div><hr style="border-top:1px dashed #000; margin:5px 0;">
+            <table style="width:100%; font-size:8pt; border-collapse: collapse;">
+                ${record.items.map(i => `<tr><td>${i.quantity} x ${i.product}</td><td style="text-align:right;">${(i.price * i.quantity)}</td></tr>`).join('')}
+            </table><hr style="border-top:1px dashed #000; margin:5px 0;">
+            <table style="width:100%; font-size:8pt; font-weight:bold;">
+                <tr style="font-size:11pt;"><td>TOTAL:</td><td style="text-align:right;">${record.total}.-</td></tr>
+                <tr style="font-weight:normal;"><td>Cash:</td><td style="text-align:right;">${record.received}</td></tr>
+                <tr style="font-weight:normal;"><td>Change:</td><td style="text-align:right;">${record.change}</td></tr>
             </table>
-            
-            <hr style="border:none; border-top:1px dashed black; margin:8px 0;">
-            
-            <table style="width:100%; font-size:9pt;">
-                <tr style="font-size:12pt; font-weight:bold;">
-                    <td>TOTAL:</td>
-                    <td style="text-align:right;">${record.total.toLocaleString()}.-</td>
-                </tr>
-                <tr style="color:#333;">
-                    <td>Cash:</td>
-                    <td style="text-align:right;">${record.received.toLocaleString()}</td>
-                </tr>
-                <tr style="color:#333;">
-                    <td>Change:</td>
-                    <td style="text-align:right;">${record.change.toLocaleString()}</td>
-                </tr>
-            </table>
-            
-            <hr style="border:none; border-top:1px dashed black; margin:10px 0;">
-            
-            <p style="font-size: 10pt; font-weight:bold; margin: 0 0 5px 0;">ช่องทางการติดต่อ</p>
-            <p style="font-size: 8pt; margin: 0;">โทร: 093-145-0736</p>
-            <p style="font-size: 8pt; margin: 0;">Facebook: ชิกชิกเก้นฉีก</p>
-            
-            <div style="margin-top:10px; text-align: center;">
-                <img src="https://qr-official.line.me/gs/M_830jgqvb_BW.png?oat_content=qr" alt="QR Code" style="width: 90px; height: 90px; filter: grayscale(1); display: block; margin: 0 auto;">
-                <p style="font-size: 8pt; margin: 5px 0 0 0;">เพิ่มเพิ่อนทางไลน์</p>
+            <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <hr style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 11pt; text-align: center; margin: 0;">ช่องทางการติดต่อ</p>
+            <p style="font-size: 8pt; text-align: center; margin: 0;">โทร: 093-145-0736</p>
+            <p style="font-size: 8pt; text-align: center; margin: 0;">Facebook: ชิกชิกเก้นฉีก</p>
+            <div style="text-align: center; font-size: 8pt; color: #555;">
+                <img src="https://qr-official.line.me/gs/M_830jgqvb_BW.png?oat_content=qr" alt="QR Code" style="display: block; margin: 0px auto; width: 80px; height: 80px;">
+                <p style="margin: 6px 0 0 0;">เพิ่มเพิ่อนทางไลน์</p>
             </div>
-            
-            <div style="margin-top:15px; border-top:1px dashed black; padding-top:10px;">
-                <p style="font-size: 12pt; font-weight:bold; margin: 0;">ขอบคุณที่ใช้บริการ</p>
-            </div>
-        </div>
+            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
+            <p style="font-size: 12pt; text-align: center; margin: 0;">ขอบคุณที่ใช้บริการ</p>
+            <br style="border: none; border-top: 1px dashed #000; margin: 5px 0;">
     `;
     window.print();
 }
 
+// --- NUMPAD SYSTEM ---
 function showGeneralNumpad(title, currentVal, onConfirm) {
     playSound('click');
     const modal = document.createElement('div');
