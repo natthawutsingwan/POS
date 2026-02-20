@@ -213,7 +213,9 @@
         </div>
       </div>
     </main>
-    <audio id="checkout-sound" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
+    <audio id="click-sound" src="button.mp3" preload="auto"></audio>
+    <audio id="checkout-sound" src="cash.mp3" preload="auto"></audio>
+    
     <!-- Modals -->
     <!-- Add/Edit Product Modal -->
     <div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
@@ -1144,11 +1146,29 @@
       
       updateCartUI();
     }
+
+    // ==================== Sound Effects ====================
+    // เล่นเสียงคลิกเมื่อกดปุ่มหรือการ์ดสินค้า
+    document.addEventListener('click', function(event) {
+      // ตรวจสอบว่าสิ่งที่ถูกคลิกเป็นปุ่ม (button) หรือการ์ดสินค้า (.product-card) หรือไม่
+      const isButton = event.target.closest('button');
+      const isProductCard = event.target.closest('.product-card');
+      
+      if (isButton || isProductCard) {
+        const clickSound = document.getElementById('click-sound');
+        if (clickSound) {
+          clickSound.currentTime = 0; // รีเซ็ตเสียงเพื่อให้กดรัวๆ ได้
+          // ใช้ .catch เพื่อป้องกัน error ในกรณีที่เบราว์เซอร์บล็อกการเล่นเสียงอัตโนมัติ
+          clickSound.play().catch(err => console.log('ไม่สามารถเล่นเสียงคลิกได้:', err)); 
+        }
+      }
+    });
     
     init();
   </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ceea15ff1edafe4',t:'MTc3MTI2MTUzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
