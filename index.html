@@ -213,7 +213,7 @@
         </div>
       </div>
     </main>
-    
+    <audio id="checkout-sound" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
     <!-- Modals -->
     <!-- Add/Edit Product Modal -->
     <div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
@@ -929,6 +929,13 @@
       const result = await apiRequest('addSale', saleData);
       
       if (result.success) {
+        // เล่นเสียงคิดเงินเมื่อชำระเงินสำเร็จ
+        const sound = document.getElementById('checkout-sound');
+        if (sound) {
+          sound.currentTime = 0; // รีเซ็ตเสียงให้เริ่มใหม่เผื่อกดรัวๆ
+          sound.play().catch(err => console.log('ไม่สามารถเล่นเสียงได้:', err));
+        }
+
         // Update queue number
         todayQueue++;
         localStorage.setItem('pos_queue_number', String(todayQueue));
@@ -1142,6 +1149,7 @@
   </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ceea15ff1edafe4',t:'MTc3MTI2MTUzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
