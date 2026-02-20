@@ -7,6 +7,9 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/promptpay-qr@0.5.0/dist/promptpay-qr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
     * { font-family: 'Sarabun', sans-serif; }
     .slide-in { animation: slideIn 0.3s ease-out; }
@@ -142,7 +145,6 @@
               class="px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-indigo-400">
           </div>
         </div>
-        
         <!-- Today Summary -->
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 text-white shadow-lg">
@@ -157,6 +159,12 @@
             <p class="text-sm opacity-90">📦 สินค้าขายได้</p>
             <p id="today-items" class="text-2xl font-bold">0</p>
           </div>
+        </div>
+      <!-- Product Summary -->
+      <div class="mb-4">
+          <h3 class="text-sm font-bold text-gray-600 mb-2 px-1">📦 สรุปยอดขายรายสินค้า (วันนี้)</h3>
+          <div id="product-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            </div>
         </div>
         
         <!-- Sales List -->
@@ -305,7 +313,7 @@
           <div id="promptpay-section" class="hidden space-y-3">
             <div id="qr-container" class="text-center">
               <div style="text-align: center; font-size: 8pt; color: #555;">
-                <img src="QRแม่โจ้ซอย9.jpg" alt="QR Code" style="display: block; margin: 5px auto; width: 350px; height: 350px;">
+                <img src="QRสาขาแม่โจ้ซอย9.jpg" alt="QR Code" style="display: block; margin: 5px auto; width: 350px; height: 350px;">
             </div>
               <p id="promptpay-display" class="text-lg font-medium text-gray-700">สาขา แม่โจ้ซอย 9</p>
             </div>
@@ -1017,6 +1025,7 @@
         sales = result.data || [];
         renderSalesHistory();
         updateTodaySummary();
+        updateProductSummary(); // <--- เพิ่มบรรทัดนี้ในฟังก์ชันเดิม
       }
     }
     
@@ -1072,6 +1081,33 @@
       if (!sale) return;
       
       showReceipt(sale);
+    }
+
+    function updateProductSummary() {
+      const summaryGrid = document.getElementById('product-summary-grid');
+      const productCounts = {};
+
+      sales.forEach(sale => {
+        if (sale.items) {
+          sale.items.forEach(item => {
+            productCounts[item.name] = (productCounts[item.name] || 0) + item.qty;
+          });
+        }
+      });
+
+      const summaryArray = Object.entries(productCounts).sort((a, b) => b[1] - a[1]);
+
+      if (summaryArray.length === 0) {
+        summaryGrid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-4 bg-white rounded-xl border border-dashed">ไม่มีข้อมูล</p>';
+        return;
+      }
+
+      summaryGrid.innerHTML = summaryArray.map(([name, qty]) => `
+        <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-50 flex justify-between items-center">
+          <span class="text-sm font-medium text-gray-700 truncate mr-2">${name}</span>
+          <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded-lg">${qty}</span>
+        </div>
+      `).join('');
     }
     
     // ==================== Tabs ====================
@@ -1146,7 +1182,7 @@
       
       updateCartUI();
     }
-
+    
     // ==================== Sound Effects ====================
     // เล่นเสียงคลิกเมื่อกดปุ่มหรือการ์ดสินค้า
     document.addEventListener('click', function(event) {
@@ -1163,16 +1199,8 @@
         }
       }
     });
-    
+
     init();
   </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ceea15ff1edafe4',t:'MTc3MTI2MTUzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
-
-
-
-
-
-
