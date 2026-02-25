@@ -145,21 +145,27 @@
               class="px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-indigo-400">
           </div>
         </div>
+        
         <!-- Today Summary -->
-        <div class="grid grid-cols-3 gap-4 mb-4">
-          <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 text-white shadow-lg">
-            <p class="text-sm opacity-90">💰 ยอดขายวันนี้</p>
-            <p id="today-sales" class="text-2xl font-bold">฿0</p>
-          </div>
-          <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 text-white shadow-lg">
-            <p class="text-sm opacity-90">🧾 จำนวนบิล</p>
-            <p id="today-bills" class="text-2xl font-bold">0</p>
-          </div>
-          <div class="bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl p-4 text-white shadow-lg">
-            <p class="text-sm opacity-90">📦 สินค้าขายได้</p>
-            <p id="today-items" class="text-2xl font-bold">0</p>
-          </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+        <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 text-white shadow-lg">
+          <p class="text-sm opacity-90">💰 รวมทั้งหมด</p>
+          <p id="today-sales" class="text-2xl font-bold">฿0</p>
         </div>
+        <div class="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-4 text-white shadow-lg">
+          <p class="text-sm opacity-90">🟠 Shopee</p>
+          <p id="today-shopee" class="text-2xl font-bold">฿0</p>
+        </div>
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-4 text-white shadow-lg">
+          <p class="text-sm opacity-90">🟢 LINEMAN</p>
+          <p id="today-lineman" class="text-2xl font-bold">฿0</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 text-white shadow-lg">
+          <p class="text-sm opacity-90">🧾 จำนวนบิล</p>
+          <p id="today-bills" class="text-2xl font-bold">0</p>
+        </div>
+        </div>
+
       <!-- Product Summary -->
       <div class="mb-4">
           <h3 class="text-sm font-bold text-gray-600 mb-2 px-1">📦 สรุปยอดขายรายสินค้า (วันนี้)</h3>
@@ -192,28 +198,26 @@
         <!-- Cart Footer -->
         <div class="border-t p-4 bg-gray-50 space-y-3">
           <!-- Sale Type -->
+          <div class="space-y-3">
           <div class="flex gap-2">
-            <button onclick="setSaleType('store')" id="sale-type-store" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-indigo-100 text-indigo-700 border-2 border-indigo-400">
-              🏪 หน้าร้าน
+            <button onclick="setMainSaleType('store')" id="sale-type-store" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-indigo-100 text-indigo-700 border-2 border-indigo-400">
+              🏪 ขายหน้าร้าน
             </button>
-            <button onclick="setSaleType('online')" id="sale-type-online" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-gray-100 text-gray-600 border-2 border-transparent">
-              🌐 ออนไลน์
+            <button onclick="setMainSaleType('online')" id="sale-type-online" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-gray-100 text-gray-600 border-2 border-transparent">
+              🌐 ขายออนไลน์
             </button>
           </div>
+          
+          <div id="checkout-actions" class="grid grid-cols-2 gap-2">
+            </div>
+        </div>
           
           <div class="flex justify-between text-lg">
             <span class="text-gray-600">รวมทั้งหมด</span>
             <span id="cart-total" class="font-bold text-indigo-600">฿0</span>
           </div>
           
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="checkout('cash')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-              💵 เงินสด
-            </button>
-            <button onclick="checkout('promptpay')" class="py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-              📱 พร้อมเพย์
-            </button>
-          </div>
+          
           
           <button onclick="clearCart()" class="w-full py-2 bg-red-100 text-red-600 rounded-xl font-medium hover:bg-red-200 transition-all">
             🗑️ ล้างตะกร้า
@@ -313,7 +317,7 @@
           <div id="promptpay-section" class="hidden space-y-3">
             <div id="qr-container" class="text-center">
               <div style="text-align: center; font-size: 8pt; color: #555;">
-                <img src="QRแม่โจ้ซอย9.jpg" alt="QR Code" style="display: block; margin: 5px auto; width: 350px; height: 350px;">
+                <img src="QRสาขาแม่โจ้ซอย9.jpg" alt="QR Code" style="display: block; margin: 5px auto; width: 350px; height: 350px;">
             </div>
               <p id="promptpay-display" class="text-lg font-medium text-gray-700">สาขา แม่โจ้ซอย 9</p>
             </div>
@@ -811,22 +815,72 @@
       }
     }
     
-    function setSaleType(type) {
-      saleType = type;
-      document.getElementById('sale-type-store').classList.toggle('bg-indigo-100', type === 'store');
-      document.getElementById('sale-type-store').classList.toggle('text-indigo-700', type === 'store');
-      document.getElementById('sale-type-store').classList.toggle('border-indigo-400', type === 'store');
-      document.getElementById('sale-type-store').classList.toggle('bg-gray-100', type !== 'store');
-      document.getElementById('sale-type-store').classList.toggle('text-gray-600', type !== 'store');
-      document.getElementById('sale-type-store').classList.toggle('border-transparent', type !== 'store');
-      
-      document.getElementById('sale-type-online').classList.toggle('bg-indigo-100', type === 'online');
-      document.getElementById('sale-type-online').classList.toggle('text-indigo-700', type === 'online');
-      document.getElementById('sale-type-online').classList.toggle('border-indigo-400', type === 'online');
-      document.getElementById('sale-type-online').classList.toggle('bg-gray-100', type !== 'online');
-      document.getElementById('sale-type-online').classList.toggle('text-gray-600', type !== 'online');
-      document.getElementById('sale-type-online').classList.toggle('border-transparent', type !== 'online');
+    // แก้ไขและเพิ่มฟังก์ชันเหล่านี้แทนที่ setSaleType เดิม
+// ==================== Sale Type Logic ====================
+function setMainSaleType(type) {
+    saleType = type;
+    
+    // ปรับ UI ปุ่มเลือกประเภท (หน้าร้าน/ออนไลน์)
+    const storeBtn = document.getElementById('sale-type-store');
+    const onlineBtn = document.getElementById('sale-type-online');
+    
+    const activeClass = 'bg-indigo-100 text-indigo-700 border-indigo-400';
+    const inactiveClass = 'bg-gray-100 text-gray-600 border-transparent';
+
+    if (type === 'store') {
+        storeBtn.className = `flex-1 py-2 px-3 rounded-xl font-medium transition-all border-2 ${activeClass}`;
+        onlineBtn.className = `flex-1 py-2 px-3 rounded-xl font-medium transition-all border-2 ${inactiveClass}`;
+    } else {
+        storeBtn.className = `flex-1 py-2 px-3 rounded-xl font-medium transition-all border-2 ${inactiveClass}`;
+        onlineBtn.className = `flex-1 py-2 px-3 rounded-xl font-medium transition-all border-2 ${activeClass}`;
     }
+
+    // เรียกฟังก์ชันเพื่อเปลี่ยนปุ่มชำระเงินด้านล่าง
+    renderCheckoutButtons();
+}
+
+// ฟังก์ชันเดิมที่คุณเรียกใน HTML คือ setMainSaleType แต่ใน JS บางจุดเป็น setSaleType 
+// จึงสร้าง alias ไว้ให้เพื่อป้องกันบั๊กครับ
+function setSaleType(type) {
+    setMainSaleType(type);
+}
+
+function renderCheckoutButtons() {
+    const container = document.getElementById('checkout-actions');
+    if (!container) return;
+
+    if (saleType === 'store') {
+        // กรณีหน้าร้าน: แสดงปุ่ม เงินสด / พร้อมเพย์
+        container.innerHTML = `
+            <button onclick="checkout('cash')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                💵 เงินสด
+            </button>
+            <button onclick="checkout('promptpay')" class="py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                📱 พร้อมเพย์
+            </button>
+        `;
+    } else {
+        // กรณีออนไลน์: แสดงปุ่ม Shopee / LINEMAN
+        container.innerHTML = `
+            <button onclick="confirmOnlineSale('Shopee')" class="py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                🟠 Shopee
+            </button>
+            <button onclick="confirmOnlineSale('LINEMAN')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                🟢 LINEMAN
+            </button>
+        `;
+    }
+}
+
+async function confirmOnlineSale(platform) {
+    if (cart.length === 0) {
+        showToast('กรุณาเลือกสินค้าก่อน', 'error');
+        return;
+    }
+    currentPaymentMethod = platform; 
+    // ยืนยันการจ่ายเงินทันทีสำหรับออนไลน์
+    await confirmPayment(); 
+}
     
     // ==================== Checkout ====================
     function checkout(method) {
@@ -1062,18 +1116,27 @@
       `).join('');
     }
     
-    function updateTodaySummary() {
-      const todaySales = sales.filter(s => {
-        const saleDate = new Date(s.date).toDateString();
-        return saleDate === new Date().toDateString();
-      });
-      
-      const totalSales = todaySales.reduce((sum, s) => sum + (s.total || 0), 0);
-      const totalItems = todaySales.reduce((sum, s) => sum + (s.items?.reduce((is, i) => is + i.qty, 0) || 0), 0);
-      
-      document.getElementById('today-sales').textContent = `฿${formatNumber(totalSales)}`;
-      document.getElementById('today-bills').textContent = todaySales.length;
-      document.getElementById('today-items').textContent = totalItems;
+          function updateTodaySummary() {
+        const todaySales = sales.filter(s => {
+          const saleDate = new Date(s.date).toDateString();
+          return saleDate === new Date().toDateString();
+        });
+        
+        const totalSales = todaySales.reduce((sum, s) => sum + (s.total || 0), 0);
+        
+        // คำนวณยอดแยกตามช่องทาง
+        const shopeeTotal = todaySales
+          .filter(s => s.paymentMethod === 'Shopee')
+          .reduce((sum, s) => sum + (s.total || 0), 0);
+          
+        const linemanTotal = todaySales
+          .filter(s => s.paymentMethod === 'LINEMAN')
+          .reduce((sum, s) => sum + (s.total || 0), 0);
+        
+        document.getElementById('today-sales').textContent = `฿${formatNumber(totalSales)}`;
+        document.getElementById('today-shopee').textContent = `฿${formatNumber(shopeeTotal)}`;
+        document.getElementById('today-lineman').textContent = `฿${formatNumber(linemanTotal)}`;
+        document.getElementById('today-bills').textContent = todaySales.length;
     }
     
     function showSaleReceipt(saleId) {
@@ -1181,8 +1244,44 @@
       await loadProducts();
       
       updateCartUI();
+      renderCheckoutButtons(); // <--- เพิ่มบรรทัดนี้เพื่อให้ปุ่มแสดงผลตอนเริ่ม
     }
-    
+    function renderCheckoutButtons() {
+  // ค้นหา div ที่เก็บปุ่มชำระเงิน (เดิมคือปุ่ม เงินสด/พร้อมเพย์)
+  const container = document.querySelector('#cart-sidebar .grid.grid-cols-2');
+  
+  if (saleType === 'store') {
+    // กรณีหน้าร้าน
+    container.innerHTML = `
+      <button onclick="checkout('cash')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+        💵 เงินสด
+      </button>
+      <button onclick="checkout('promptpay')" class="py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+        📱 พร้อมเพย์
+      </button>
+    `;
+  } else {
+    // กรณีออนไลน์
+    container.innerHTML = `
+      <button onclick="confirmOnlineSale('Shopee')" class="py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+        🟠 Shopee
+      </button>
+      <button onclick="confirmOnlineSale('LINEMAN')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+        🟢 LINEMAN
+      </button>
+    `;
+  }
+}
+
+// ฟังก์ชันบันทึกการขายออนไลน์ทันที
+async function confirmOnlineSale(platform) {
+  if (cart.length === 0) {
+    showToast('กรุณาเลือกสินค้าก่อน', 'error');
+    return;
+  }
+  currentPaymentMethod = platform; // บันทึกชื่อ Shopee หรือ LINEMAN
+  await confirmPayment(); // ใช้ฟังก์ชันบันทึกเดิมของระบบ
+}
     // ==================== Sound Effects ====================
     // เล่นเสียงคลิกเมื่อกดปุ่มหรือการ์ดสินค้า
     document.addEventListener('click', function(event) {
@@ -1199,9 +1298,16 @@
         }
       }
     });
-
+    async function init() {
+  updateUI();
+  // ... โค้ดอื่นๆ ...
+  await loadProducts();
+  updateCartUI();
+  
+  renderCheckoutButtons(); // <--- เพิ่มบรรทัดนี้
+}
+    
     init();
   </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ceea15ff1edafe4',t:'MTc3MTI2MTUzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
