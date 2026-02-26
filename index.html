@@ -160,11 +160,20 @@
           <p class="text-sm opacity-90">🟢 LINEMAN</p>
           <p id="today-lineman" class="text-2xl font-bold">฿0</p>
         </div>
+        <div class="bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl p-4 text-white shadow-lg">
+          <p class="text-sm opacity-90">💵 เงินสด</p>
+          <p id="today-cash" class="text-2xl font-bold">฿0</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-4 text-white shadow-lg">
+          <p class="text-sm opacity-90">📱 พร้อมเพย์</p>
+          <p id="today-promptpay" class="text-2xl font-bold">฿0</p>
+        </div>
         <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 text-white shadow-lg">
           <p class="text-sm opacity-90">🧾 จำนวนบิล</p>
           <p id="today-bills" class="text-2xl font-bold">0</p>
         </div>
         </div>
+
 
       <!-- Product Summary -->
       <div class="mb-4">
@@ -1125,15 +1134,27 @@ async function confirmOnlineSale(platform) {
         const totalSales = todaySales.reduce((sum, s) => sum + (s.total || 0), 0);
         
         // คำนวณยอดแยกตามช่องทาง
+
+        // คำนวณยอดเงินสด
+        const cashTotal = todaySales
+            .filter(s => s.paymentMethod === 'cash')
+            .reduce((sum, s) => sum + (s.total || 0), 0);
+        // คำนวณยอดพร้อมเพย์
+        const promptpayTotal = todaySales
+            .filter(s => s.paymentMethod === 'promptpay')
+            .reduce((sum, s) => sum + (s.total || 0), 0);
+        // คำนวณยอด Shopee    
         const shopeeTotal = todaySales
           .filter(s => s.paymentMethod === 'Shopee')
           .reduce((sum, s) => sum + (s.total || 0), 0);
-          
+        // คำนวณยอด LINEMAN  
         const linemanTotal = todaySales
           .filter(s => s.paymentMethod === 'LINEMAN')
           .reduce((sum, s) => sum + (s.total || 0), 0);
         
         document.getElementById('today-sales').textContent = `฿${formatNumber(totalSales)}`;
+        document.getElementById('today-cash').textContent = `฿${formatNumber(cashTotal)}`;
+        document.getElementById('today-promptpay').textContent = `฿${formatNumber(promptpayTotal)}`;
         document.getElementById('today-shopee').textContent = `฿${formatNumber(shopeeTotal)}`;
         document.getElementById('today-lineman').textContent = `฿${formatNumber(linemanTotal)}`;
         document.getElementById('today-bills').textContent = todaySales.length;
