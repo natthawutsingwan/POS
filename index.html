@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="th" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>C-POS System</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <script src="https://cdn.jsdelivr.net/npm/promptpay-qr@0.5.0/dist/promptpay-qr.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C-POS System</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="/_sdk/element_sdk.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/promptpay-qr@0.5.0/dist/promptpay-qr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
     * { font-family: 'Sarabun', sans-serif; }
     .slide-in { animation: slideIn 0.3s ease-out; }
     .slide-out { animation: slideOut 0.3s ease-out; }
@@ -21,11 +20,11 @@
     .cart-badge { animation: pulse 0.3s ease-out; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
     @media print {
-      body * { visibility: hidden; }
-      #receipt-print, #receipt-print * { visibility: visible; }
-      #receipt-print { position: absolute; left: 0; top: 0; width: 80mm; }
+        body * { visibility: hidden; }
+        #receipt-print, #receipt-print * { visibility: visible; }
+        #receipt-print { position: absolute; left: 0; top: 0; width: 80mm; }
     }
-    /* บังคับให้การ์ดหรือคอนเทนเนอร์รูปเป็นสี่เหลี่ยมจัตุรัส */
+/* บังคับให้การ์ดหรือคอนเทนเนอร์รูปเป็นสี่เหลี่ยมจัตุรัส */
 .aspect-square {
   aspect-ratio: 1 / 1;
   width: 100%;
@@ -46,302 +45,314 @@
   height: 200px; /* ปรับความสูงของรูปให้เต็มการ์ด */
   object-fit: cover; /* ทำให้รูปไม่บิดเบี้ยวและเต็มกรอบ */
 }
-  </style>
+</style>
 </head>
 <body class="h-full bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
-  <div id="app" class="h-full flex flex-col overflow-hidden">
+    <div id="app" class="h-full flex flex-col overflow-hidden">
     
-    <!-- Header -->
-    <header class="glass-effect shadow-lg px-4 py-3 flex items-center justify-between z-30 border-b border-white/50">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl btn-primary flex items-center justify-center shadow-lg">
-          <span class="text-white text-xl">🏪</span>
-        </div>
-        <div>
-          <h1 id="header-store-name" class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">ชิกชิกเก้นฉีก</h1>
-          <p class="text-xs text-gray-500">C-POS ระบบขายหน้าร้าน</p>
-        </div>
-      </div>
-      
-      <!-- Navigation -->
-      <nav class="flex gap-1 bg-gray-100 p-1 rounded-xl">
-        <button onclick="switchTab('sell')" id="tab-sell" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white shadow text-indigo-600">
-          🛒 ขาย
-        </button>
-        <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-white/50">
-          📦 สินค้า
-        </button>
-        <button onclick="switchTab('history')" id="tab-history" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-white/50">
-          📊 ประวัติ
-        </button>
-      </nav>
-      
-      <!-- Cart Button -->
-      <button onclick="toggleCart()" class="relative p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-all border border-gray-100">
-        <span class="text-2xl">🛒</span>
-        <span id="cart-count" class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center cart-badge hidden">0</span>
-      </button>
-    </header>
-    
-    <!-- Main Content -->
-    <main class="flex-1 overflow-hidden relative">
-      
-      <!-- Sell Tab -->
-      <div id="page-sell" class="page h-full flex flex-col p-4 overflow-hidden">
-        <!-- Search & Filter -->
-        <div class="flex gap-3 mb-4">
-          <div class="flex-1 relative">
-            <input type="text" id="search-product" placeholder="🔍 ค้นหาสินค้า หรือสแกนบาร์โค้ด..." 
-              class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all text-lg"
-              oninput="filterProducts(this.value)">
-          </div>
-          <select id="category-filter" onchange="filterByCategory(this.value)" 
-            class="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 bg-white font-medium">
-            <option value="">📁 ทุกหมวด</option>
-          </select>
-        </div>
-        
-        <!-- Products Grid -->
-        <div id="products-grid" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pb-4">
-          <!-- Products loaded dynamically -->
-        </div>
-      </div>
-      
-      <!-- Products Management Tab -->
-      <div id="page-products" class="page h-full flex flex-col p-4 overflow-hidden hidden">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-gray-800">📦 จัดการสินค้า</h2>
-          <button onclick="showAddProductModal()" class="btn-primary text-blue-600 px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
-            <span>➕</span> เพิ่มสินค้า
-          </button>
-        </div>
-        
-        <!-- Stock Table -->
-        <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
-          <table class="w-full">
-            <thead class="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0">
-              <tr>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">รูป</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">ชื่อสินค้า</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">บาร์โค้ด</th>
-                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-600">ราคา</th>
-                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-600">สต็อก</th>
-                <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody id="stock-table" class="divide-y divide-gray-100">
-              <!-- Stock loaded dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-      
-      <!-- History Tab -->
-      <div id="page-history" class="page h-full flex flex-col p-4 overflow-hidden hidden">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-gray-800">📊 ประวัติการขาย</h2>
-          <div class="flex gap-2">
-            <input type="date" id="history-date" onchange="loadSalesHistory()" 
-              class="px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-indigo-400">
-          </div>
-        </div>
-        
-        <!-- Today Summary -->
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-        <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 text-white shadow-lg">
-          <p class="text-sm opacity-90">💰 รวมทั้งหมด</p>
-          <p id="today-sales" class="text-2xl font-bold">฿0</p>
-        </div>
-        <div class="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-4 text-white shadow-lg">
-          <p class="text-sm opacity-90">🟠 Shopee</p>
-          <p id="today-shopee" class="text-2xl font-bold">฿0</p>
-        </div>
-        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-4 text-white shadow-lg">
-          <p class="text-sm opacity-90">🟢 LINEMAN</p>
-          <p id="today-lineman" class="text-2xl font-bold">฿0</p>
-        </div>
-        <div class="bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl p-4 text-white shadow-lg">
-          <p class="text-sm opacity-90">💵 เงินสด</p>
-          <p id="today-cash" class="text-2xl font-bold">฿0</p>
-        </div>
-        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-4 text-white shadow-lg">
-          <p class="text-sm opacity-90">📱 พร้อมเพย์</p>
-          <p id="today-promptpay" class="text-2xl font-bold">฿0</p>
-        </div>
-        <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 text-white shadow-lg">
-          <p class="text-sm opacity-90">🧾 จำนวนบิล</p>
-          <p id="today-bills" class="text-2xl font-bold">0</p>
-        </div>
-        </div>
-
-
-      <!-- Product Summary -->
-      <div class="mb-4">
-          <h3 class="text-sm font-bold text-gray-600 mb-2 px-1">📦 สรุปยอดขายรายสินค้า (วันนี้)</h3>
-          <div id="product-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            </div>
-        </div>
-        
-        <!-- Sales List -->
-        <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
-          <div id="sales-list" class="divide-y divide-gray-100">
-            <!-- Sales loaded dynamically -->
-          </div>
-        </div>
-      </div>
-      
-      <!-- Cart Sidebar -->
-      <div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="toggleCart()"></div>
-      <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-96 max-w-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
-        <div class="p-4 border-b bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
-          <div class="flex justify-between items-center">
-            <h3 class="text-xl font-bold">🛒 ตะกร้าสินค้า</h3>
-            <button onclick="toggleCart()" class="p-2 hover:bg-white/20 rounded-lg transition-all">✕</button>
-          </div>
-        </div>
-        
-        <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3">
-          <!-- Cart items -->
-        </div>
-        
-        <!-- Cart Footer -->
-        <div class="border-t p-4 bg-gray-50 space-y-3">
-          <!-- Sale Type -->
-          <div class="space-y-3">
-          <div class="flex gap-2">
-            <button onclick="setMainSaleType('store')" id="sale-type-store" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-indigo-100 text-indigo-700 border-2 border-indigo-400">
-              🏪 ขายหน้าร้าน
-            </button>
-            <button onclick="setMainSaleType('online')" id="sale-type-online" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-gray-100 text-gray-600 border-2 border-transparent">
-              🌐 ขายออนไลน์
-            </button>
-          </div>
-          
-          <div id="checkout-actions" class="grid grid-cols-2 gap-2">
-            </div>
-        </div>
-          
-          <div class="flex justify-between text-lg">
-            <span class="text-gray-600">รวมทั้งหมด</span>
-            <span id="cart-total" class="font-bold text-indigo-600">฿0</span>
-          </div>
-          
-          
-          
-          <button onclick="clearCart()" class="w-full py-2 bg-red-100 text-red-600 rounded-xl font-medium hover:bg-red-200 transition-all">
-            🗑️ ล้างตะกร้า
-          </button>
-        </div>
-      </div>
-    </main>
-    <audio id="click-sound" src="button.mp3" preload="auto"></audio>
-    <audio id="checkout-sound" src="cash.mp3" preload="auto"></audio>
-    
-    <!-- Modals -->
-    <!-- Add/Edit Product Modal -->
-    <div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90%] overflow-y-auto fade-in">
-        <div class="p-5 border-b bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-2xl">
-          <h3 id="product-modal-title" class="text-xl font-bold">➕ เพิ่มสินค้าใหม่</h3>
-        </div>
-        <form id="product-form" class="p-5 space-y-4" onsubmit="saveProduct(event)">
-          <input type="hidden" id="product-id">
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">รูปสินค้า</label>
-            <div class="flex items-center gap-3">
-              <div id="product-image-preview" class="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center text-3xl border-2 border-dashed border-gray-300">
-                📷
-              </div>
-              <input type="file" id="product-image-file" accept="image/*" onchange="previewProductImage(event)" class="flex-1 text-sm">
-            </div>
-            <input type="hidden" id="product-image">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า *</label>
-            <input type="text" id="product-name" required class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">บาร์โค้ด</label>
-            <input type="text" id="product-barcode" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-          </div>
-          
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท) *</label>
-              <input type="number" id="product-price" required min="0" step="0.01" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">สต็อก *</label>
-              <input type="number" id="product-stock" required min="0" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
-            </div>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">หมวดหมู่</label>
-            <input type="text" id="product-category" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" placeholder="เช่น อาหาร, เครื่องดื่ม">
-          </div>
-          
-          <div class="flex gap-3 pt-2">
-            <button type="button" onclick="closeProductModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
-              ยกเลิก
-            </button>
-            <button type="submit" class="flex-1 py-3 btn-primary text-blue-600 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all">
-              💾 บันทึก
-            </button>
-          </div>
-        </form>
-      </div>
+<!-- Header -->
+<header class="glass-effect shadow-lg px-4 py-3 flex items-center justify-between z-30 border-b border-white/50">
+    <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl btn-primary flex items-center justify-center shadow-lg">
+        <span class="text-white text-xl">🏪</span>
+    </div>
+    <div>
+        <h1 id="header-store-name" class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">ชิกชิกเก้นฉีก</h1>
+        <p class="text-xs text-gray-500">C-POS ระบบขายหน้าร้าน</p>
+    </div>
     </div>
     
-    <!-- Payment Modal -->
+<!-- Navigation -->
+    <nav class="flex gap-1 bg-gray-100 p-1 rounded-xl">
+        <button onclick="switchTab('sell')" id="tab-sell" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white shadow text-indigo-600">
+            🛒 ขาย</button>
+        <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600">
+            📦 สินค้า</button>
+        <button onclick="switchTab('receipts')" id="tab-receipts" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600">
+            📊 สรุปยอด</button>
+        <button onclick="switchTab('history')" id="tab-history" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600">
+            📜 ประวัติขาย</button>
+    </nav>
+
+<!-- Cart Button -->
+    <button onclick="toggleCart()" class="relative p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-all border border-gray-100">
+        <span class="text-2xl">🛒</span>
+        <span id="cart-count" class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center cart-badge hidden">0</span>
+    </button>
+</header>
+    
+<!-- Main Content -->
+    <main class="flex-1 overflow-hidden relative">
+    
+<!-- Sell Tab -->
+    <div id="page-sell" class="page h-full flex flex-col p-4 overflow-hidden">
+<!-- Search & Filter -->
+        <div class="flex gap-3 mb-4">
+            <div class="flex-1 relative">
+            <input type="text" id="search-product" placeholder="🔍 ค้นหาสินค้า หรือสแกนบาร์โค้ด..." 
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all text-lg"
+            oninput="filterProducts(this.value)">
+        </div>
+        <select id="category-filter" onchange="filterByCategory(this.value)" 
+        class="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 bg-white font-medium">
+        <option value="">📁 ทุกหมวด</option>
+        </select>
+        </div>
+        
+<!-- Products Grid -->
+        <div id="products-grid" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pb-4">
+<!-- Products loaded dynamically -->
+        </div>
+        </div>
+    
+<!-- Products Management Tab -->
+    <div id="page-products" class="page h-full flex flex-col p-4 overflow-hidden hidden">
+        <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">📦 จัดการสินค้า</h2>
+        <button onclick="showAddProductModal()" class="btn-primary text-blue-600 px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+        <span>➕</span> เพิ่มสินค้า
+        </button>
+    </div>
+        
+<!-- Stock Table -->
+    <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
+        <table class="w-full">
+            <thead class="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0">
+        <tr>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">รูป</th>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">ชื่อสินค้า</th>
+            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">บาร์โค้ด</th>
+            <th class="px-4 py-3 text-right text-sm font-semibold text-gray-600">ราคา</th>
+            <th class="px-4 py-3 text-right text-sm font-semibold text-gray-600">สต็อก</th>
+            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">จัดการ</th>
+        </tr>
+        </thead>
+    <tbody id="stock-table" class="divide-y divide-gray-100">
+<!-- Stock loaded dynamically -->
+        </tbody>
+        </table>
+        </div>
+    </div>
+    
+<!-- History Tab -->
+    <div id="page-receipts" class="page h-full flex flex-col p-4 overflow-hidden hidden">
+        <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">📊 สรุปยอดขายวันนี้</h2>
+        <button onclick="loadSalesHistory()" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg text-sm">🔄 รีเฟรช</button>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">💰 รวมทั้งหมด</p>
+        <p id="today-sales" class="text-xl font-bold">฿0</p>
+    </div>
+    <div class="bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">🟠 Shopee</p>
+        <p id="today-shopee" class="text-xl font-bold">฿0</p>
+    </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">🟢 LINEMAN</p>
+        <p id="today-lineman" class="text-xl font-bold">฿0</p>
+    </div>
+    <div class="bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">💵 เงินสด</p>
+        <p id="today-cash" class="text-xl font-bold">฿0</p>
+    </div>
+    <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">📱 พร้อมเพย์</p>
+        <p id="today-promptpay" class="text-xl font-bold">฿0</p>
+    </div>
+    <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">🧾 จำนวนบิล</p>
+        <p id="today-bills" class="text-xl font-bold">0</p>
+    </div>
+    </div>
+
+    <div class="flex-1 overflow-auto">
+        <h3 class="text-sm font-bold text-gray-600 mb-2 px-1">📦 สรุปยอดขายรายสินค้า (วันนี้)</h3>
+        <div id="product-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 pb-6">
+    </div>
+    </div>
+    </div>
+
+    <div id="page-history" class="page h-full flex flex-col p-4 overflow-hidden hidden">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">📜 ประวัติการขายรายบิล</h2>
+        <input type="date" id="history-date" onchange="loadSalesHistory()" class="px-4 py-2 rounded-xl border-2 border-gray-200">
+    </div>
+        <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
+        <div id="sales-list" class="divide-y divide-gray-100"></div>
+    </div>
+    </div>
+
+
+
+<!-- Product Summary -->
+    <div class="mb-4">
+        <h3 class="text-sm font-bold text-gray-600 mb-2 px-1">📦 สรุปยอดขายรายสินค้า (วันนี้)</h3>
+        <div id="product-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        </div>
+    </div>
+        
+<!-- Sales List -->
+    <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
+        <div id="sales-list" class="divide-y divide-gray-100">
+<!-- Sales loaded dynamically -->
+        </div>
+    </div>
+    </div>
+    
+<!-- Cart Sidebar -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="toggleCart()"></div>
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-96 max-w-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-4 border-b bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+        <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">🛒 ตะกร้าสินค้า</h3>
+            <button onclick="toggleCart()" class="p-2 hover:bg-white/20 rounded-lg transition-all">✕</button>
+        </div>
+    </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3">
+<!-- Cart items -->
+        </div>
+        
+<!-- Cart Footer -->
+        <div class="border-t p-4 bg-gray-50 space-y-3">
+<!-- Sale Type -->
+        <div class="space-y-3">
+        <div class="flex gap-2">
+            <button onclick="setMainSaleType('store')" id="sale-type-store" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-indigo-100 text-indigo-700 border-2 border-indigo-400">
+            🏪 ขายหน้าร้าน
+            </button>
+            <button onclick="setMainSaleType('online')" id="sale-type-online" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-gray-100 text-gray-600 border-2 border-transparent">
+            🌐 ขายออนไลน์
+            </button>
+        </div>
+        <div id="checkout-actions" class="grid grid-cols-2 gap-2">
+            </div>
+        </div>
+        
+        <div class="flex justify-between text-lg">
+            <span class="text-gray-600">รวมทั้งหมด</span>
+            <span id="cart-total" class="font-bold text-indigo-600">฿0</span>
+        </div>
+        
+        
+        
+        <button onclick="clearCart()" class="w-full py-2 bg-red-100 text-red-600 rounded-xl font-medium hover:bg-red-200 transition-all">
+            🗑️ ล้างตะกร้า
+        </button>
+        </div>
+    </div>
+    </main>
+<audio id="click-sound" src="button.mp3" preload="auto"></audio>
+<audio id="checkout-sound" src="cash.mp3" preload="auto"></audio>
+    
+<!-- Modals -->
+<!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90%] overflow-y-auto fade-in">
+        <div class="p-5 border-b bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-2xl">
+        <h3 id="product-modal-title" class="text-xl font-bold">➕ เพิ่มสินค้าใหม่</h3>
+        </div>
+        <form id="product-form" class="p-5 space-y-4" onsubmit="saveProduct(event)">
+        <input type="hidden" id="product-id">
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">รูปสินค้า</label>
+            <div class="flex items-center gap-3">
+            <div id="product-image-preview" class="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center text-3xl border-2 border-dashed border-gray-300">
+                📷
+            </div>
+            <input type="file" id="product-image-file" accept="image/*" onchange="previewProductImage(event)" class="flex-1 text-sm">
+            </div>
+            <input type="hidden" id="product-image">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า *</label>
+            <input type="text" id="product-name" required class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">บาร์โค้ด</label>
+            <input type="text" id="product-barcode" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท) *</label>
+                <input type="number" id="product-price" required min="0" step="0.01" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">สต็อก *</label>
+                <input type="number" id="product-stock" required min="0" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100">
+            </div>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">หมวดหมู่</label>
+            <input type="text" id="product-category" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" placeholder="เช่น อาหาร, เครื่องดื่ม">
+        </div>
+        
+        <div class="flex gap-3 pt-2">
+            <button type="button" onclick="closeProductModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
+                ยกเลิก
+            </button>
+            <button type="submit" class="flex-1 py-3 btn-primary text-blue-600 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all">
+                💾 บันทึก
+            </button>
+        </div>
+        </form>
+    </div>
+    </div>
+    
+<!-- Payment Modal -->
     <div id="payment-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md fade-in">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md fade-in">
         <div id="payment-header" class="p-5 border-b bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-t-2xl">
-          <h3 class="text-xl font-bold">💵 ชำระเงินสด</h3>
+        <h3 class="text-xl font-bold">💵 ชำระเงินสด</h3>
         </div>
         <div class="p-5 space-y-4">
-          <div class="text-center py-4">
+        <div class="text-center py-4">
             <p class="text-gray-600">ยอดที่ต้องชำระ</p>
             <p id="payment-amount" class="text-4xl font-bold text-indigo-600">฿0</p>
-          </div>
-          
-          <!-- Cash Payment -->
-          <div id="cash-section" class="space-y-3">
+        </div>
+        
+<!-- Cash Payment -->
+        <div id="cash-section" class="space-y-3">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">รับเงิน (บาท)</label>
-              <input type="number" id="cash-received" min="0" step="0.01" 
+            <label class="block text-sm font-medium text-gray-700 mb-1">รับเงิน (บาท)</label>
+            <input type="number" id="cash-received" min="0" step="0.01" 
                 class="w-full px-4 py-3 text-2xl text-center rounded-xl border-2 border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100"
                 oninput="calculateChange()">
             </div>
             <div class="bg-yellow-50 rounded-xl p-4 text-center">
-              <p class="text-sm text-gray-600">เงินทอน</p>
-              <p id="change-amount" class="text-3xl font-bold text-yellow-600">฿0</p>
+            <p class="text-sm text-gray-600">เงินทอน</p>
+            <p id="change-amount" class="text-3xl font-bold text-yellow-600">฿0</p>
             </div>
-          </div>
-          
-          <!-- PromptPay Payment -->
-          <div id="promptpay-section" class="hidden space-y-3">
+        </div>
+        
+<!-- PromptPay Payment -->
+        <div id="promptpay-section" class="hidden space-y-3">
             <div id="qr-container" class="text-center">
-              <div style="text-align: center; font-size: 8pt; color: #555;">
+            <div style="text-align: center; font-size: 8pt; color: #555;">
                 <img src="QRสาขาแม่โจ้ซอย9.jpg" alt="QR Code" style="display: block; margin: 5px auto; width: 350px; height: 350px;">
+        </div>
+            <p id="promptpay-display" class="text-lg font-medium text-gray-700">สาขา แม่โจ้ซอย 9</p>
             </div>
-              <p id="promptpay-display" class="text-lg font-medium text-gray-700">สาขา แม่โจ้ซอย 9</p>
-            </div>
-          </div>
-          
-          <div class="flex gap-3 pt-2">
+        </div>
+        
+        <div class="flex gap-3 pt-2">
             <button onclick="closePaymentModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
-              ยกเลิก
+            ยกเลิก
             </button>
             <button onclick="confirmPayment()" class="flex-1 py-3 btn-primary text-blue-600 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all ">
-              ✅ ยืนยัน
+            ✅ ยืนยัน
             </button>
-          </div>
         </div>
-      </div>
+        </div>
+    </div>
     </div>
     
     <!-- Receipt Modal -->
@@ -1196,26 +1207,28 @@ async function confirmOnlineSale(platform) {
     
     // ==================== Tabs ====================
     function switchTab(tab) {
-      currentTab = tab;
-      
-      // Update tab buttons
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-white', 'shadow', 'text-indigo-600');
-        btn.classList.add('text-gray-600');
-      });
-      document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow', 'text-indigo-600');
-      document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
-      
-      // Update pages
-      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-      document.getElementById(`page-${tab}`).classList.remove('hidden');
-      
-      // Load data for specific tabs
-      if (tab === 'history') {
+  currentTab = tab;
+  
+  // จัดการ UI ปุ่ม Tab
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('bg-white', 'shadow', 'text-indigo-600');
+    btn.classList.add('text-gray-600');
+  });
+  document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow', 'text-indigo-600');
+  
+  // จัดการการแสดงผลหน้า
+  document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+  document.getElementById(`page-${tab}`).classList.remove('hidden');
+  
+  // โหลดข้อมูลตามหน้า
+  if (tab === 'history' || tab === 'receipts') {
+    // กำหนดวันที่ปัจจุบันหากยังไม่มีค่า
+    if(!document.getElementById('history-date').value) {
         document.getElementById('history-date').value = new Date().toISOString().split('T')[0];
-        loadSalesHistory();
-      }
     }
+    loadSalesHistory(); // ฟังก์ชันนี้จะไปอัปเดตทั้งยอดรวมและรายการสินค้า
+  }
+}
     
     // ==================== Utilities ====================
     function formatNumber(num) {
