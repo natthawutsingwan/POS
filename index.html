@@ -73,12 +73,6 @@
         <button onclick="switchTab('history')" id="tab-history" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600">
             📜 ประวัติขาย</button>
     </nav>
-
-<!-- Cart Button -->
-    <button onclick="toggleCart()" class="relative p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-all border border-gray-100">
-        <span class="text-2xl">🛒</span>
-        <span id="cart-count" class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center cart-badge hidden">0</span>
-    </button>
 </header>
     
 <!-- Main Content -->
@@ -97,6 +91,11 @@
         class="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 bg-white font-medium">
         <option value="">📁 ทุกหมวด</option>
         </select>
+<!-- Cart Button -->
+    <button onclick="toggleCart()" class="relative p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-all border border-gray-100">
+        <span class="text-2xl">🛒</span>
+        <span id="cart-count" class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center cart-badge hidden">0</span>
+    </button>
         </div>
         
 <!-- Products Grid -->
@@ -1345,3 +1344,4 @@ async function confirmOnlineSale(platform) {
   </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ceea15ff1edafe4',t:'MTc3MTI2MTUzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
