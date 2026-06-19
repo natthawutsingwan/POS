@@ -36,24 +36,23 @@
 .product-card {
   display: flex;
   flex-direction: column;
-  height: 150px; /* ให้การ์ดทุกใบสูงเท่ากันในแถวเดียวกัน */
-  object-fit: cover; /* ทำให้รูปไม่บิดเบี้ยวและเต็มกรอบ */
+  height: 150px; 
+  object-fit: cover; 
 }
 
 .product-card img {
-  width: 200px; /* ปรับความกว้างของรูปให้เต็มการ์ด */
-  height: 200px; /* ปรับความสูงของรูปให้เต็มการ์ด */
-  object-fit: cover; /* ทำให้รูปไม่บิดเบี้ยวและเต็มกรอบ */
+  width: 200px; 
+  height: 200px; 
+  object-fit: cover; 
 }
 </style>
 </head>
 <body class="h-full bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
     <div id="app" class="h-full flex flex-col overflow-hidden">
     
-<!-- Header -->
 <header class="glass-effect shadow-lg px-4 py-3 flex items-center justify-between z-30 border-b border-white/50">
     <div class="flex items-center gap-3">
-    <div class="w-10 h-10 rounded-xl btn-primary flex items-center justify-center shadow-lg">
+    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg">
         <span class="text-white text-xl">🏪</span>
     </div>
     <div>
@@ -62,8 +61,7 @@
     </div>
     </div>
     
-<!-- Navigation -->
-    <nav class="flex gap-1 bg-gray-100 p-1 rounded-xl">
+<nav class="flex gap-1 bg-gray-100 p-1 rounded-xl">
         <button onclick="switchTab('sell')" id="tab-sell" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white shadow text-indigo-600">
             🛒 ขาย</button>
         <button onclick="switchTab('products')" id="tab-products" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600">
@@ -75,13 +73,10 @@
     </nav>
 </header>
     
-<!-- Main Content -->
-    <main class="flex-1 overflow-hidden relative">
+<main class="flex-1 overflow-hidden relative">
     
-<!-- Sell Tab -->
-    <div id="page-sell" class="page h-full flex flex-col p-4 overflow-hidden">
-<!-- Search & Filter -->
-        <div class="flex gap-3 mb-4">
+<div id="page-sell" class="page h-full flex flex-col p-4 overflow-hidden">
+<div class="flex gap-3 mb-4">
             <div class="flex-1 relative">
             <input type="text" id="search-product" placeholder="🔍 ค้นหาสินค้า หรือสแกนบาร์โค้ด..." 
             class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all text-lg"
@@ -91,30 +86,25 @@
         class="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-400 bg-white font-medium">
         <option value="">📁 ทุกหมวด</option>
         </select>
-<!-- Cart Button -->
-    <button onclick="toggleCart()" class="relative p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-all border border-gray-100">
+<button onclick="toggleCart()" class="relative p-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-all border border-gray-100">
         <span class="text-2xl">🛒</span>
         <span id="cart-count" class="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center cart-badge hidden">0</span>
     </button>
         </div>
         
-<!-- Products Grid -->
-        <div id="products-grid" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pb-4">
-<!-- Products loaded dynamically -->
-        </div>
+<div id="products-grid" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pb-4">
+</div>
         </div>
     
-<!-- Products Management Tab -->
-    <div id="page-products" class="page h-full flex flex-col p-4 overflow-hidden hidden">
+<div id="page-products" class="page h-full flex flex-col p-4 overflow-hidden hidden">
         <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">📦 จัดการสินค้า</h2>
-        <button onclick="showAddProductModal()" class="btn-primary text-blue-600 px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+        <button onclick="showAddProductModal()" class="bg-indigo-50 text-indigo-600 px-5 py-2.5 rounded-xl font-medium shadow-md hover:shadow-xl transition-all flex items-center gap-2">
         <span>➕</span> เพิ่มสินค้า
         </button>
     </div>
         
-<!-- Stock Table -->
-    <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
+<div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
         <table class="w-full">
             <thead class="bg-gradient-to-r from-gray-50 to-gray-100 sticky top-0">
         <tr>
@@ -127,20 +117,18 @@
         </tr>
         </thead>
     <tbody id="stock-table" class="divide-y divide-gray-100">
-<!-- Stock loaded dynamically -->
-        </tbody>
+</tbody>
         </table>
         </div>
     </div>
     
-<!-- History Tab -->
-    <div id="page-receipts" class="page h-full flex flex-col p-4 overflow-hidden hidden">
+<div id="page-receipts" class="page h-full flex flex-col p-4 overflow-hidden hidden">
         <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">📊 สรุปยอดขายวันนี้</h2>
         <button onclick="loadSalesHistory()" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg text-sm">🔄 รีเฟรช</button>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
         <div class="bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 text-white shadow-lg">
         <p class="text-xs opacity-90">💰 รวมทั้งหมด</p>
         <p id="today-sales" class="text-xl font-bold">฿0</p>
@@ -161,6 +149,10 @@
         <p class="text-xs opacity-90">📱 พร้อมเพย์</p>
         <p id="today-promptpay" class="text-xl font-bold">฿0</p>
     </div>
+    <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-4 text-white shadow-lg">
+        <p class="text-xs opacity-90">🏛️ โครงการรัฐ</p>
+        <p id="today-gov" class="text-xl font-bold">฿0</p>
+    </div>
     <div class="bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 text-white shadow-lg">
         <p class="text-xs opacity-90">🧾 จำนวนบิล</p>
         <p id="today-bills" class="text-xl font-bold">0</p>
@@ -174,7 +166,7 @@
     </div>
     </div>
 
-    <div id="page-history" class="page h-full flex flex-col p-4 overflow-hidden hidden">
+<div id="page-history" class="page h-full flex flex-col p-4 overflow-hidden hidden">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">📜 ประวัติการขายรายบิล</h2>
         <input type="date" id="history-date" onchange="loadSalesHistory()" class="px-4 py-2 rounded-xl border-2 border-gray-200">
@@ -184,25 +176,7 @@
     </div>
     </div>
 
-
-
-<!-- Product Summary -->
-    <div class="mb-4">
-        <h3 class="text-sm font-bold text-gray-600 mb-2 px-1">📦 สรุปยอดขายรายสินค้า (วันนี้)</h3>
-        <div id="product-summary-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        </div>
-    </div>
-        
-<!-- Sales List -->
-    <div class="flex-1 overflow-auto bg-white rounded-2xl shadow-lg border border-gray-100">
-        <div id="sales-list" class="divide-y divide-gray-100">
-<!-- Sales loaded dynamically -->
-        </div>
-    </div>
-    </div>
-    
-<!-- Cart Sidebar -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="toggleCart()"></div>
+<div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="toggleCart()"></div>
     <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-96 max-w-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
         <div class="p-4 border-b bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
         <div class="flex justify-between items-center">
@@ -212,13 +186,10 @@
     </div>
         
         <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3">
-<!-- Cart items -->
-        </div>
+</div>
         
-<!-- Cart Footer -->
-        <div class="border-t p-4 bg-gray-50 space-y-3">
-<!-- Sale Type -->
-        <div class="space-y-3">
+<div class="border-t p-4 bg-gray-50 space-y-3">
+<div class="space-y-3">
         <div class="flex gap-2">
             <button onclick="setMainSaleType('store')" id="sale-type-store" class="flex-1 py-2 px-3 rounded-xl font-medium transition-all bg-indigo-100 text-indigo-700 border-2 border-indigo-400">
             🏪 ขายหน้าร้าน
@@ -236,8 +207,6 @@
             <span id="cart-total" class="font-bold text-indigo-600">฿0</span>
         </div>
         
-        
-        
         <button onclick="clearCart()" class="w-full py-2 bg-red-100 text-red-600 rounded-xl font-medium hover:bg-red-200 transition-all">
             🗑️ ล้างตะกร้า
         </button>
@@ -247,9 +216,7 @@
 <audio id="click-sound" src="button.mp3" preload="auto"></audio>
 <audio id="checkout-sound" src="cash.mp3" preload="auto"></audio>
     
-<!-- Modals -->
-<!-- Add/Edit Product Modal -->
-    <div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+<div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90%] overflow-y-auto fade-in">
         <div class="p-5 border-b bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-2xl">
         <h3 id="product-modal-title" class="text-xl font-bold">➕ เพิ่มสินค้าใหม่</h3>
@@ -298,7 +265,7 @@
             <button type="button" onclick="closeProductModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
                 ยกเลิก
             </button>
-            <button type="submit" class="flex-1 py-3 btn-primary text-blue-600 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all">
+            <button type="submit" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all">
                 💾 บันทึก
             </button>
         </div>
@@ -306,8 +273,7 @@
     </div>
     </div>
     
-<!-- Payment Modal -->
-    <div id="payment-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+<div id="payment-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md fade-in">
         <div id="payment-header" class="p-5 border-b bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-t-2xl">
         <h3 class="text-xl font-bold">💵 ชำระเงินสด</h3>
@@ -318,8 +284,7 @@
             <p id="payment-amount" class="text-4xl font-bold text-indigo-600">฿0</p>
         </div>
         
-<!-- Cash Payment -->
-        <div id="cash-section" class="space-y-3">
+<div id="cash-section" class="space-y-3">
             <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">รับเงิน (บาท)</label>
             <input type="number" id="cash-received" min="0" step="0.01" 
@@ -332,8 +297,7 @@
             </div>
         </div>
         
-<!-- PromptPay Payment -->
-        <div id="promptpay-section" class="hidden space-y-3">
+<div id="promptpay-section" class="hidden space-y-3">
             <div id="qr-container" class="text-center">
             <div style="text-align: center; font-size: 8pt; color: #555;">
                 <img src="QRแม่โจ้ซอย9.jpg" alt="QR Code" style="display: block; margin: 5px auto; width: 350px; height: 350px;">
@@ -346,21 +310,42 @@
             <button onclick="closePaymentModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
             ยกเลิก
             </button>
-            <button onclick="confirmPayment()" class="flex-1 py-3 btn-primary text-blue-600 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all ">
+            <button onclick="confirmPayment()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all ">
             ✅ ยืนยัน
             </button>
         </div>
         </div>
     </div>
     </div>
+
+<div id="online-order-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm fade-in">
+        <div id="online-order-header" class="p-5 border-b text-white rounded-t-2xl font-bold text-lg">
+          📦 กรอกหมายเลขคำสั่งซื้อ
+        </div>
+        <div class="p-5 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">เลขออเดอร์ (Order Number)</label>
+            <input type="text" id="online-order-number" class="w-full px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-center text-lg font-bold font-mono" placeholder="ระบุเลขออเดอร์">
+          </div>
+          <div class="flex gap-3">
+            <button onclick="closeOnlineOrderModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
+              ยกเลิก
+            </button>
+            <button onclick="submitOnlineSale()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+              ตกลง
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     
-    <!-- Receipt Modal -->
     <div id="receipt-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm fade-in">
         <div id="receipt-print" class="p-5">
           <div class="text-center mb-4">
             <h3 id="receipt-store-name" class="text-xl font-bold">ชิกชิกเก้นฉีก</h3>
-            <p class="text-center text-sm text-gray0">หมี่ไก่ฉีก สาขาแม่โจ้ซอย 9</p>
+            <p class="text-center text-sm text-gray-500">หมี่ไก่ฉีก สาขาแม่โจ้ซอย 9</p>
             <p id="receipt-store-phone" class="text-sm text-gray-600"></p>
             <div class="border-b-2 border-dashed border-gray-300 my-3"></div>
             <p class="text-sm text-gray-600" id="receipt-date"></p>
@@ -371,8 +356,7 @@
           <div class="border-b-2 border-dashed border-gray-300 my-3"></div>
           
           <div id="receipt-items" class="space-y-2 text-sm">
-            <!-- Receipt items -->
-          </div>
+            </div>
           
           <div class="border-b-2 border-dashed border-gray-300 my-3"></div>
           
@@ -413,19 +397,17 @@
           <button onclick="closeReceiptModal()" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
             ปิด
           </button>
-          <button onclick="printReceipt()" class="flex-1 py-3 btn-primary text-blue-600 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+          <button onclick="printReceipt()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
             🖨️ พิมพ์
           </button>
         </div>
       </div>
     </div>
     
-    <!-- Toast -->
     <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg hidden z-50">
       <span id="toast-message">บันทึกสำเร็จ</span>
     </div>
     
-    <!-- Loading -->
     <div id="loading" class="fixed inset-0 bg-black/30 z-50 hidden flex items-center justify-center">
       <div class="bg-white rounded-2xl p-6 shadow-2xl flex flex-col items-center gap-3">
         <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
@@ -453,6 +435,7 @@
     let saleType = 'store';
     let currentPaymentMethod = 'cash';
     let todayQueue = 1;
+    let currentOrderNumber = ''; // ตัวแปรเก็บเลขออเดอร์
     
     // ==================== Element SDK ====================
     if (window.elementSdk) {
@@ -555,8 +538,6 @@
         <h4 class="font-medium text-gray-800 line-clamp-2 text-sm leading-snug mb-2">${p.name}
             <span class="text-xs text-gray-600">(สต็อก: ${p.stock})</span>
           </h4>
-        <div class="flex justify-between items-center mt-auto">
-        </div>
       </div>
     </div>
   `).join('');
@@ -704,7 +685,6 @@
       const product = products.find(p => p.id === id);
       if (!product) return;
       
-      // Custom inline confirmation
       const btn = event.target;
       if (btn.dataset.confirming !== 'true') {
         btn.dataset.confirming = 'true';
@@ -778,6 +758,7 @@
     
     function clearCart() {
       cart = [];
+      currentOrderNumber = ''; // ล้างเลขออเดอร์ทิ้งด้วย
       updateCartUI();
       showToast('ล้างตะกร้าแล้ว');
     }
@@ -834,12 +815,10 @@
       }
     }
     
-    // แก้ไขและเพิ่มฟังก์ชันเหล่านี้แทนที่ setSaleType เดิม
 // ==================== Sale Type Logic ====================
 function setMainSaleType(type) {
     saleType = type;
     
-    // ปรับ UI ปุ่มเลือกประเภท (หน้าร้าน/ออนไลน์)
     const storeBtn = document.getElementById('sale-type-store');
     const onlineBtn = document.getElementById('sale-type-online');
     
@@ -854,53 +833,85 @@ function setMainSaleType(type) {
         onlineBtn.className = `flex-1 py-2 px-3 rounded-xl font-medium transition-all border-2 ${activeClass}`;
     }
 
-    // เรียกฟังก์ชันเพื่อเปลี่ยนปุ่มชำระเงินด้านล่าง
     renderCheckoutButtons();
 }
 
-// ฟังก์ชันเดิมที่คุณเรียกใน HTML คือ setMainSaleType แต่ใน JS บางจุดเป็น setSaleType 
-// จึงสร้าง alias ไว้ให้เพื่อป้องกันบั๊กครับ
 function setSaleType(type) {
     setMainSaleType(type);
 }
 
 function renderCheckoutButtons() {
-    const container = document.getElementById('checkout-actions');
-    if (!container) return;
-
-    if (saleType === 'store') {
-        // กรณีหน้าร้าน: แสดงปุ่ม เงินสด / พร้อมเพย์
-        container.innerHTML = `
-            <button onclick="checkout('cash')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                💵 เงินสด
-            </button>
-            <button onclick="checkout('promptpay')" class="py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                📱 พร้อมเพย์
-            </button>
-        `;
-    } else {
-        // กรณีออนไลน์: แสดงปุ่ม Shopee / LINEMAN
-        container.innerHTML = `
-            <button onclick="confirmOnlineSale('Shopee')" class="py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                🟠 Shopee
-            </button>
-            <button onclick="confirmOnlineSale('LINEMAN')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-                🟢 LINEMAN
-            </button>
-        `;
-    }
+  const container = document.querySelector('#cart-sidebar #checkout-actions') || document.getElementById('checkout-actions') || document.querySelector('#cart-sidebar .grid');
+  if(!container) return;
+  
+  if (saleType === 'store') {
+    container.className = "grid grid-cols-3 gap-2";
+    container.innerHTML = `
+      <button onclick="checkout('cash')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all text-xs sm:text-sm">
+        💵 เงินสด
+      </button>
+      <button onclick="checkout('promptpay')" class="py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all text-xs sm:text-sm">
+        📱 พร้อมเพย์
+      </button>
+      <button onclick="confirmOnlineSale('gov')" class="py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all text-xs sm:text-sm">
+        🏛️ โครงการรัฐ
+      </button>
+    `;
+  } else {
+    container.className = "grid grid-cols-2 gap-2";
+    container.innerHTML = `
+      <button onclick="confirmOnlineSale('Shopee')" class="py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+        🟠 Shopee
+      </button>
+      <button onclick="confirmOnlineSale('LINEMAN')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+        🟢 LINEMAN
+      </button>
+    `;
+  }
 }
 
 async function confirmOnlineSale(platform) {
-    if (cart.length === 0) {
-        showToast('กรุณาเลือกสินค้าก่อน', 'error');
-        return;
-    }
-    currentPaymentMethod = platform; 
-    // ยืนยันการจ่ายเงินทันทีสำหรับออนไลน์
-    await confirmPayment(); 
+  if (cart.length === 0) {
+    showToast('กรุณาเลือกสินค้าก่อน', 'error');
+    return;
+  }
+  currentPaymentMethod = platform; 
+
+  // ถ้าเป็นโครงการรัฐ ให้บันทึกเลย
+  if (platform === 'gov') {
+    await confirmPayment();
+    return;
+  }
+
+  // ถ้าเป็น Shopee/LINEMAN ให้โชว์ป๊อปอัปเลขออเดอร์
+  const header = document.getElementById('online-order-header');
+  if (platform === 'Shopee') {
+    header.className = 'p-5 border-b bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-2xl font-bold text-lg';
+    header.innerHTML = '🟠 บันทึกออเดอร์ Shopee';
+  } else {
+    header.className = 'p-5 border-b bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-t-2xl font-bold text-lg';
+    header.innerHTML = '🟢 บันทึกออเดอร์ LINEMAN';
+  }
+  
+  document.getElementById('online-order-number').value = '';
+  document.getElementById('online-order-modal').classList.remove('hidden');
 }
-    
+
+function closeOnlineOrderModal() {
+  document.getElementById('online-order-modal').classList.add('hidden');
+}
+
+async function submitOnlineSale() {
+  const orderNum = document.getElementById('online-order-number').value.trim();
+  if (!orderNum) {
+      showToast('กรุณากรอกเลขออเดอร์', 'error');
+      return;
+  }
+  currentOrderNumber = orderNum; // เก็บเลขออเดอร์
+  closeOnlineOrderModal();
+  await confirmPayment(); 
+}
+
     // ==================== Checkout ====================
     function checkout(method) {
       if (cart.length === 0) {
@@ -925,12 +936,6 @@ async function confirmOnlineSale(platform) {
         document.getElementById('payment-header').innerHTML = '<h3 class="text-xl font-bold">📱 ชำระพร้อมเพย์</h3>';
         document.getElementById('cash-section').classList.add('hidden');
         document.getElementById('promptpay-section').classList.remove('hidden');
-        
-        // Show existing QR if available
-        if (config.promptpay_qr) {
-          document.getElementById('qr-image-container').innerHTML = 
-            `<img src="${config.promptpay_qr}" class="w-full h-full object-contain">`;
-        }
       }
       
       document.getElementById('payment-modal').classList.remove('hidden');
@@ -941,23 +946,6 @@ async function confirmOnlineSale(platform) {
       const received = parseFloat(document.getElementById('cash-received').value) || 0;
       const change = received - total;
       document.getElementById('change-amount').textContent = `฿${formatNumber(Math.max(0, change))}`;
-    }
-    
-    function uploadQRCode(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64 = e.target.result;
-        config.promptpay_qr = base64;
-        document.getElementById('qr-image-container').innerHTML = 
-          `<img src="${base64}" class="w-full h-full object-contain">`;
-        if (window.elementSdk) {
-          window.elementSdk.setConfig({ promptpay_qr: base64 });
-        }
-      };
-      reader.readAsDataURL(file);
     }
     
     function closePaymentModal() {
@@ -978,7 +966,6 @@ async function confirmOnlineSale(platform) {
         change = cashReceived - total;
       }
       
-      // Get today's queue number
       const today = new Date().toISOString().split('T')[0];
       const storedDate = localStorage.getItem('pos_queue_date');
       if (storedDate !== today) {
@@ -991,7 +978,6 @@ async function confirmOnlineSale(platform) {
       
       const queueNumber = String(todayQueue).padStart(3, '0');
       
-      // Prepare sale data
       const saleData = {
         queue: queueNumber,
         date: new Date().toISOString(),
@@ -1005,32 +991,29 @@ async function confirmOnlineSale(platform) {
         paymentMethod: currentPaymentMethod,
         saleType,
         cashReceived: currentPaymentMethod === 'cash' ? cashReceived : 0,
-        change: currentPaymentMethod === 'cash' ? change : 0
+        change: currentPaymentMethod === 'cash' ? change : 0,
+        orderNumber: currentOrderNumber || '' // ส่งเลขออเดอร์ไปด้วย
       };
       
-      // Save sale to API
       const result = await apiRequest('addSale', saleData);
       
       if (result.success) {
-        // เล่นเสียงคิดเงินเมื่อชำระเงินสำเร็จ
         const sound = document.getElementById('checkout-sound');
         if (sound) {
-          sound.currentTime = 0; // รีเซ็ตเสียงให้เริ่มใหม่เผื่อกดรัวๆ
+          sound.currentTime = 0; 
           sound.play().catch(err => console.log('ไม่สามารถเล่นเสียงได้:', err));
         }
 
-        // Update queue number
         todayQueue++;
         localStorage.setItem('pos_queue_number', String(todayQueue));
         
-        // Close payment modal and cart
         closePaymentModal();
-        toggleCart();
+        if(!document.getElementById('cart-sidebar').classList.contains('translate-x-full')) {
+            toggleCart();
+        }
         
-        // Show receipt
         showReceipt(saleData);
         
-        // Update stock locally (will be synced via API)
         cart.forEach(item => {
           const product = products.find(p => p.id === item.productId);
           if (product) {
@@ -1038,8 +1021,8 @@ async function confirmOnlineSale(platform) {
           }
         });
         
-        // Clear cart and reload
         cart = [];
+        currentOrderNumber = ''; // ล้างเลขออเดอร์หลังขายเสร็จ
         updateCartUI();
         renderProducts();
         
@@ -1052,7 +1035,13 @@ async function confirmOnlineSale(platform) {
     function showReceipt(saleData) {
       document.getElementById('receipt-date').textContent = new Date(saleData.date).toLocaleString('th-TH');
       document.getElementById('receipt-queue').textContent = `#${saleData.queue}`;
-      document.getElementById('receipt-sale-type').textContent = saleData.saleType === 'store' ? '🏪 หน้าร้าน' : '🌐 ออนไลน์';
+      
+      // เพิ่มเลขออเดอร์ในใบเสร็จ
+      let displaySaleType = saleData.saleType === 'store' ? '🏪 หน้าร้าน' : '🌐 ออนไลน์';
+      if (saleData.orderNumber) {
+        displaySaleType += ` (${saleData.orderNumber})`;
+      }
+      document.getElementById('receipt-sale-type').textContent = displaySaleType;
       
       document.getElementById('receipt-items').innerHTML = saleData.items.map(item => `
         <div class="flex justify-between">
@@ -1062,8 +1051,15 @@ async function confirmOnlineSale(platform) {
       `).join('');
       
       document.getElementById('receipt-total').textContent = `฿${formatNumber(saleData.total)}`;
-      document.getElementById('receipt-payment-method').textContent = 
-        saleData.paymentMethod === 'cash' ? '💵 เงินสด' : '📱 พร้อมเพย์';
+      
+      const methodMap = {
+        'cash': '💵 เงินสด',
+        'promptpay': '📱 พร้อมเพย์',
+        'Shopee': '🟠 Shopee',
+        'LINEMAN': '🟢 LINEMAN',
+        'gov': '🏛️ โครงการรัฐ'
+      };
+      document.getElementById('receipt-payment-method').textContent = methodMap[saleData.paymentMethod] || saleData.paymentMethod;
       
       if (saleData.paymentMethod === 'cash') {
         document.getElementById('receipt-cash-info').classList.remove('hidden');
@@ -1075,7 +1071,6 @@ async function confirmOnlineSale(platform) {
       
       document.getElementById('receipt-modal').classList.remove('hidden');
       
-      // Auto print
       setTimeout(() => printReceipt(), 500);
     }
     
@@ -1098,7 +1093,7 @@ async function confirmOnlineSale(platform) {
         sales = result.data || [];
         renderSalesHistory();
         updateTodaySummary();
-        updateProductSummary(); // <--- เพิ่มบรรทัดนี้ในฟังก์ชันเดิม
+        updateProductSummary(); 
       }
     }
     
@@ -1115,6 +1110,14 @@ async function confirmOnlineSale(platform) {
         return;
       }
       
+      const methodMap = {
+        'cash': '💵 เงินสด',
+        'promptpay': '📱 พร้อมเพย์',
+        'Shopee': '🟠 Shopee',
+        'LINEMAN': '🟢 LINEMAN',
+        'gov': '🏛️ โครงการรัฐ'
+      };
+      
       list.innerHTML = sales.map(sale => `
         <div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer" onclick="showSaleReceipt('${sale.id}')">
           <div class="flex justify-between items-start">
@@ -1124,7 +1127,7 @@ async function confirmOnlineSale(platform) {
                 ${sale.saleType === 'store' ? '🏪 หน้าร้าน' : '🌐 ออนไลน์'}
               </span>
               <p class="text-sm text-gray-500 mt-1">${new Date(sale.date).toLocaleString('th-TH')}</p>
-              <p class="text-xs text-gray-400">${sale.items?.length || 0} รายการ • ${sale.paymentMethod === 'cash' ? '💵 เงินสด' : '📱 พร้อมเพย์'}</p>
+              <p class="text-xs text-gray-400">${sale.items?.length || 0} รายการ • ${methodMap[sale.paymentMethod] || sale.paymentMethod} ${sale.orderNumber ? `(${sale.orderNumber})` : ''}</p>
             </div>
             <div class="text-right">
               <p class="text-lg font-bold text-green-600">฿${formatNumber(sale.total)}</p>
@@ -1135,7 +1138,7 @@ async function confirmOnlineSale(platform) {
       `).join('');
     }
     
-          function updateTodaySummary() {
+    function updateTodaySummary() {
         const todaySales = sales.filter(s => {
           const saleDate = new Date(s.date).toDateString();
           return saleDate === new Date().toDateString();
@@ -1143,23 +1146,20 @@ async function confirmOnlineSale(platform) {
         
         const totalSales = todaySales.reduce((sum, s) => sum + (s.total || 0), 0);
         
-        // คำนวณยอดแยกตามช่องทาง
-
-        // คำนวณยอดเงินสด
         const cashTotal = todaySales
             .filter(s => s.paymentMethod === 'cash')
             .reduce((sum, s) => sum + (s.total || 0), 0);
-        // คำนวณยอดพร้อมเพย์
         const promptpayTotal = todaySales
             .filter(s => s.paymentMethod === 'promptpay')
-            .reduce((sum, s) => sum + (s.total || 0), 0);
-        // คำนวณยอด Shopee    
+            .reduce((sum, s) => sum + (s.total || 0), 0); 
         const shopeeTotal = todaySales
           .filter(s => s.paymentMethod === 'Shopee')
           .reduce((sum, s) => sum + (s.total || 0), 0);
-        // คำนวณยอด LINEMAN  
         const linemanTotal = todaySales
           .filter(s => s.paymentMethod === 'LINEMAN')
+          .reduce((sum, s) => sum + (s.total || 0), 0);
+        const govTotal = todaySales
+          .filter(s => s.paymentMethod === 'gov')
           .reduce((sum, s) => sum + (s.total || 0), 0);
         
         document.getElementById('today-sales').textContent = `฿${formatNumber(totalSales)}`;
@@ -1167,13 +1167,13 @@ async function confirmOnlineSale(platform) {
         document.getElementById('today-promptpay').textContent = `฿${formatNumber(promptpayTotal)}`;
         document.getElementById('today-shopee').textContent = `฿${formatNumber(shopeeTotal)}`;
         document.getElementById('today-lineman').textContent = `฿${formatNumber(linemanTotal)}`;
+        document.getElementById('today-gov').textContent = `฿${formatNumber(govTotal)}`;
         document.getElementById('today-bills').textContent = todaySales.length;
     }
     
     function showSaleReceipt(saleId) {
       const sale = sales.find(s => s.id === saleId);
       if (!sale) return;
-      
       showReceipt(sale);
     }
 
@@ -1206,28 +1206,24 @@ async function confirmOnlineSale(platform) {
     
     // ==================== Tabs ====================
     function switchTab(tab) {
-  currentTab = tab;
-  
-  // จัดการ UI ปุ่ม Tab
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('bg-white', 'shadow', 'text-indigo-600');
-    btn.classList.add('text-gray-600');
-  });
-  document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow', 'text-indigo-600');
-  
-  // จัดการการแสดงผลหน้า
-  document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-  document.getElementById(`page-${tab}`).classList.remove('hidden');
-  
-  // โหลดข้อมูลตามหน้า
-  if (tab === 'history' || tab === 'receipts') {
-    // กำหนดวันที่ปัจจุบันหากยังไม่มีค่า
-    if(!document.getElementById('history-date').value) {
-        document.getElementById('history-date').value = new Date().toISOString().split('T')[0];
+      currentTab = tab;
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'shadow', 'text-indigo-600');
+        btn.classList.add('text-gray-600');
+      });
+      document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow', 'text-indigo-600');
+      
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(`page-${tab}`).classList.remove('hidden');
+      
+      if (tab === 'history' || tab === 'receipts') {
+        if(!document.getElementById('history-date').value) {
+            document.getElementById('history-date').value = new Date().toISOString().split('T')[0];
+        }
+        loadSalesHistory(); 
+      }
     }
-    loadSalesHistory(); // ฟังก์ชันนี้จะไปอัปเดตทั้งยอดรวมและรายการสินค้า
-  }
-}
     
     // ==================== Utilities ====================
     function formatNumber(num) {
@@ -1256,13 +1252,22 @@ async function confirmOnlineSale(platform) {
     }
     
     // ==================== Init ====================
+    document.addEventListener('click', function(event) {
+      const isButton = event.target.closest('button');
+      const isProductCard = event.target.closest('.product-card');
+      
+      if (isButton || isProductCard) {
+        const clickSound = document.getElementById('click-sound');
+        if (clickSound) {
+          clickSound.currentTime = 0; 
+          clickSound.play().catch(err => console.log('ไม่สามารถเล่นเสียงคลิกได้:', err)); 
+        }
+      }
+    });
+
     async function init() {
       updateUI();
-      
-      // Set today's date for history
       document.getElementById('history-date').value = new Date().toISOString().split('T')[0];
-      
-      // Load queue number
       const today = new Date().toISOString().split('T')[0];
       const storedDate = localStorage.getItem('pos_queue_date');
       if (storedDate === today) {
@@ -1272,78 +1277,12 @@ async function confirmOnlineSale(platform) {
         localStorage.setItem('pos_queue_number', '1');
         todayQueue = 1;
       }
-      
-      // Load products
       await loadProducts();
-      
       updateCartUI();
-      renderCheckoutButtons(); // <--- เพิ่มบรรทัดนี้เพื่อให้ปุ่มแสดงผลตอนเริ่ม
+      renderCheckoutButtons(); 
     }
-    function renderCheckoutButtons() {
-  // ค้นหา div ที่เก็บปุ่มชำระเงิน (เดิมคือปุ่ม เงินสด/พร้อมเพย์)
-  const container = document.querySelector('#cart-sidebar .grid.grid-cols-2');
-  
-  if (saleType === 'store') {
-    // กรณีหน้าร้าน
-    container.innerHTML = `
-      <button onclick="checkout('cash')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-        💵 เงินสด
-      </button>
-      <button onclick="checkout('promptpay')" class="py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-        📱 พร้อมเพย์
-      </button>
-    `;
-  } else {
-    // กรณีออนไลน์
-    container.innerHTML = `
-      <button onclick="confirmOnlineSale('Shopee')" class="py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-        🟠 Shopee
-      </button>
-      <button onclick="confirmOnlineSale('LINEMAN')" class="py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
-        🟢 LINEMAN
-      </button>
-    `;
-  }
-}
-
-// ฟังก์ชันบันทึกการขายออนไลน์ทันที
-async function confirmOnlineSale(platform) {
-  if (cart.length === 0) {
-    showToast('กรุณาเลือกสินค้าก่อน', 'error');
-    return;
-  }
-  currentPaymentMethod = platform; // บันทึกชื่อ Shopee หรือ LINEMAN
-  await confirmPayment(); // ใช้ฟังก์ชันบันทึกเดิมของระบบ
-}
-    // ==================== Sound Effects ====================
-    // เล่นเสียงคลิกเมื่อกดปุ่มหรือการ์ดสินค้า
-    document.addEventListener('click', function(event) {
-      // ตรวจสอบว่าสิ่งที่ถูกคลิกเป็นปุ่ม (button) หรือการ์ดสินค้า (.product-card) หรือไม่
-      const isButton = event.target.closest('button');
-      const isProductCard = event.target.closest('.product-card');
-      
-      if (isButton || isProductCard) {
-        const clickSound = document.getElementById('click-sound');
-        if (clickSound) {
-          clickSound.currentTime = 0; // รีเซ็ตเสียงเพื่อให้กดรัวๆ ได้
-          // ใช้ .catch เพื่อป้องกัน error ในกรณีที่เบราว์เซอร์บล็อกการเล่นเสียงอัตโนมัติ
-          clickSound.play().catch(err => console.log('ไม่สามารถเล่นเสียงคลิกได้:', err)); 
-        }
-      }
-    });
-    async function init() {
-  updateUI();
-  // ... โค้ดอื่นๆ ...
-  await loadProducts();
-  updateCartUI();
-  
-  renderCheckoutButtons(); // <--- เพิ่มบรรทัดนี้
-}
     
     init();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ceea15ff1edafe4',t:'MTc3MTI2MTUzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
-
-
-
